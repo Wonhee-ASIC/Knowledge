@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ASIC Knowledge Base</title>
+
+  <style>
+    :root {
+      --primary: #6C9BFF;
+      --primary-light: rgba(108,155,255,0.16);
+      --primary-dark: #0B1220;
+      --bg: #0B0E14;
+      --card: #151A24;
+      --surface-2: #10141D;
+      --border: #2A3142;
+      --text: #E7EAF2;
+      --text-light: #98A2B8;
+      --success: #4ADE80;
+      --success-light: rgba(74,222,128,0.14);
+      --error: #F87171;
+      --warning: #F5A623;
+      --warning-light: rgba(245,166,35,0.14);
+      --rtl2gds: #22D3EE;
+      --rtl2gds-light: rgba(34,211,238,0.14);
+      --frontend: #C084FC;
+      --frontend-light: rgba(192,132,252,0.14);
+      --signoff: #F87171;
+      --signoff-light: rgba(248,113,113,0.14);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; width: 100%; overflow: hidden; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .app { display: flex; flex-direction: column; height: 100vh; }
+
+    /* ---- Header ---- */
+    header {
+      background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+      color: white;
+      padding: 14px 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      flex-shrink: 0;
+      position: relative;
+      z-index: 50;
+    }
+
+    header h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 6px; }
+    header p { font-size: 12px; opacity: 0.9; margin-bottom: 10px; }
+    .header-inner { width: 100%; }
+
+    .search-bar { position: relative; display: flex; gap: 6px; margin-bottom: 18px; }
+
+    .search-input {
+      flex: 1;
+      padding: 9px 12px;
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 6px;
+      font-size: 13px;
+      background: rgba(255,255,255,0.95);
+      color: #1e293b;
+      font-family: inherit;
+    }
+
+    .search-input::placeholder { color: #64748b; }
+    .search-input:focus { outline: none; border-color: white; box-shadow: 0 0 0 3px rgba(255,255,255,0.25); }
+
+    .search-btn, .search-clear {
+      border: 1px solid rgba(255,255,255,0.3);
+      color: white;
+      padding: 0 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .search-btn { background: rgba(255,255,255,0.25); }
+    .search-btn:hover { background: rgba(255,255,255,0.4); }
+    .search-clear { background: rgba(255,255,255,0.1); }
+    .search-clear:hover { background: rgba(255,255,255,0.25); }
+
+    /* ---- Search Results Dropdown ---- */
+    .search-results {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      margin-top: 6px;
+      background: var(--card);
+      border-radius: 8px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+      max-height: 360px;
+      overflow-y: auto;
+      z-index: 100;
+    }
+
+    .search-results.open { display: block; }
+
+    .search-result-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      cursor: pointer;
+      color: var(--text);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
+    }
+
+    .search-result-item:last-child { border-bottom: none; }
+    .search-result-item:hover { background: var(--primary-light); }
+
+    .search-result-icon { font-size: 16px; flex-shrink: 0; }
+    .search-result-text { flex: 1; }
+
+    .search-result-title { font-size: 13px; font-weight: 600; color: var(--text); }
+    .search-result-type { font-size: 11px; color: var(--text-light); margin-top: 1px; }
+    .search-result-snippet { font-size: 12px; color: var(--text-light); margin-top: 3px; line-height: 1.5; }
+    .search-result-snippet mark { background: #FDE047; color: #1a1a1a; padding: 0 2px; border-radius: 2px; font-weight: 600; }
+
+    .search-no-result { padding: 16px; text-align: center; color: var(--text-light); font-size: 13px; }
+
+    /* ---- Primary Tabs ---- */
+    .tabs-primary {
+      display: flex;
+      background: var(--primary-dark);
+      flex-shrink: 0;
+    }
+
+    .tab-primary-btn {
+      background: transparent;
+      border: none;
+      padding: 11px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.65);
+      cursor: pointer;
+      transition: all 0.25s;
+      border-bottom: 3px solid transparent;
+    }
+
+    .tab-primary-btn:hover { color: white; background: rgba(255,255,255,0.08); }
+    .tab-primary-btn.active { color: white; border-bottom-color: var(--primary); background: rgba(255,255,255,0.08); }
+
+    /* ---- Secondary Tabs (RTL to GDS sub-steps) ---- */
+    .tabs-secondary {
+      display: none;
+      overflow-x: auto;
+      background: var(--card);
+      border-bottom: 2px solid var(--border);
+      flex-shrink: 0;
+      scroll-behavior: smooth;
+    }
+
+    .tabs-secondary.visible { display: flex; }
+    .tabs-secondary::-webkit-scrollbar { height: 4px; }
+    .tabs-secondary::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    .tab-secondary-btn {
+      background: transparent;
+      border: none;
+      padding: 10px 14px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-light);
+      cursor: pointer;
+      transition: all 0.25s;
+      border-bottom: 3px solid transparent;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .tab-secondary-btn:hover { color: var(--rtl2gds); background: var(--rtl2gds-light); }
+    .tab-secondary-btn.active { color: var(--rtl2gds); border-bottom-color: var(--rtl2gds); font-weight: 700; }
+    .tab-secondary-btn.overview-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
+    .tab-secondary-btn.overview-btn:hover { color: var(--primary); background: var(--primary-light); }
+
+    /* ---- Main Content ---- */
+    .main-content { flex: 1; overflow-y: auto; padding: 16px; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; animation: fadeIn 0.2s; }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    .section-header {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--primary);
+      margin: 0 0 14px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--primary-light);
+    }
+
+    /* ---- News ---- */
+    .news-item { background: var(--card); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 12px; overflow: hidden; }
+    .news-header { padding: 12px 14px; cursor: pointer; background: linear-gradient(to right, var(--primary-light), transparent); border-bottom: 1px solid var(--border); }
+    .news-title { font-weight: 600; font-size: 15px; color: var(--primary); margin-bottom: 6px; }
+    .news-meta { font-size: 12px; color: var(--text-light); }
+    .news-content { display: none; padding: 14px; background: var(--surface-2); font-size: 14px; }
+    .news-item.open .news-content { display: block; }
+    .news-toggle { font-size: 12px; color: var(--text-light); float: right; transition: transform 0.3s; }
+    .news-item.open .news-toggle { transform: rotate(180deg); }
+
+    /* ---- Flow Overview: Flow_Overview.svg 표시 프레임 ---- */
+    .flow-diagram-frame {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      overflow-x: auto;
+    }
+    .flow-diagram-img { display: block; width: 100%; height: auto; margin: 0 auto; }
+
+    /* ---- Flow Step Card (screenshot style) ---- */
+    .flow-category-label {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin: 20px 0 10px;
+      padding: 4px 10px;
+      display: inline-block;
+      border-radius: 4px;
+    }
+
+    .flow-category-label.frontend { color: var(--frontend); background: var(--frontend-light); }
+    .flow-category-label.rtl2gds { color: var(--rtl2gds); background: var(--rtl2gds-light); }
+    .flow-category-label.signoff { color: var(--signoff); background: var(--signoff-light); }
+
+    .flow-card {
+      background: var(--card);
+      border: 2px solid var(--rtl2gds);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 4px;
+    }
+
+    .flow-card.frontend { border-color: var(--frontend); }
+    .flow-card.rtl2gds { border-color: var(--rtl2gds); }
+    .flow-card.signoff { border-color: var(--signoff); }
+
+    .flow-card-inner { padding: 16px; }
+
+    .flow-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+
+    .flow-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-width: 26px; height: 26px; border-radius: 6px;
+      background: var(--rtl2gds); color: white; font-weight: 700; font-size: 13px; flex-shrink: 0;
+    }
+
+    .flow-card.frontend .flow-badge { background: var(--frontend); }
+    .flow-card.rtl2gds .flow-badge { background: var(--rtl2gds); }
+    .flow-card.signoff .flow-badge { background: var(--signoff); }
+
+    .flow-card-title { font-size: 16px; font-weight: 700; color: var(--rtl2gds); }
+    .flow-card.frontend .flow-card-title { color: var(--frontend); }
+    .flow-card.rtl2gds .flow-card-title { color: var(--rtl2gds); }
+    .flow-card.signoff .flow-card-title { color: var(--signoff); }
+
+    .flow-role-objective { font-size: 13px; margin-bottom: 14px; color: var(--text); }
+    .flow-role-objective div { margin-bottom: 3px; }
+    .flow-role-objective b { color: var(--text); }
+
+    .io-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-bottom: 12px; }
+
+    @media (min-width: 640px) {
+      .io-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    .io-box { border-radius: 6px; padding: 10px 12px; font-size: 12.5px; }
+    .io-box.input-box { background: var(--primary-light); }
+    .io-box.output-box { background: var(--success-light); }
+
+    .io-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 6px; }
+    .io-box.input-box .io-label { color: var(--primary); }
+    .io-box.output-box .io-label { color: var(--success); }
+
+    .io-sublabel { font-size: 10.5px; font-weight: 700; margin: 8px 0 3px; opacity: 0.75; }
+
+    .io-list { list-style: none; }
+    .io-list li { padding: 2px 0; padding-left: 12px; position: relative; }
+    .io-list li::before { content: '·'; position: absolute; left: 0; font-weight: 900; }
+
+    .extra-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+    @media (min-width: 640px) { .extra-grid { grid-template-columns: 1fr 1fr; } }
+
+    .extra-box { border-radius: 6px; padding: 10px 12px; font-size: 12.5px; }
+    .extra-box.gonogo-box { background: var(--success-light); border: 1px solid rgba(74,222,128,0.35); }
+    .extra-box.risk-box { background: var(--warning-light); border: 1px solid rgba(245,166,35,0.35); }
+
+    .extra-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 6px; }
+    .extra-box.gonogo-box .extra-label { color: var(--success); }
+    .extra-box.risk-box .extra-label { color: var(--warning); }
+
+    .extra-list { list-style: none; }
+    .extra-list li { padding: 3px 0; line-height: 1.5; }
+
+    .keypoints-box { margin-top: 12px; font-size: 12.5px; background: var(--surface-2); border-radius: 6px; padding: 10px 12px; border: 1px dashed var(--border); white-space: pre-wrap; line-height: 1.7; }
+
+    .flow-arrow-connector {
+      display: flex; justify-content: center; align-items: center;
+      padding: 4px 0; color: var(--primary); font-size: 18px;
+    }
+
+    /* Feedback loop callout */
+    .feedback-callout {
+      background: var(--warning-light);
+      border: 2px dashed var(--warning);
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin: 10px 0;
+      font-size: 13px;
+      color: #FCD34D;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .feedback-callout:hover { background: rgba(245,166,35,0.25); }
+    .feedback-callout .icon { font-size: 20px; flex-shrink: 0; }
+
+    .term-link {
+      color: var(--primary);
+      cursor: pointer;
+      text-decoration: none;
+      border: none;
+      background: none;
+    }
+
+    /* ---- Terms Tab (아코디언, 큼직하게) ---- */
+    .term-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 12px;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+    .term-item:hover { border-color: var(--primary); }
+
+    .term-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 18px 20px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .term-title { font-weight: 700; font-size: 17px; color: var(--primary); line-height: 1.4; }
+
+    .term-toggle { font-size: 14px; color: var(--text-light); transition: transform 0.3s; flex-shrink: 0; }
+    .term-item.open .term-toggle { transform: rotate(180deg); }
+    .term-item.open .term-header { border-bottom: 1px solid var(--border); }
+
+    .term-body {
+      display: none;
+      padding: 4px 20px 20px;
+      font-size: 15px;
+      line-height: 1.8;
+      color: var(--text);
+    }
+    .term-item.open .term-body { display: block; }
+
+    /* ---- Modal ---- */
+    .modal {
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5); z-index: 1000; overflow-y: auto; padding: 20px 0;
+    }
+    .modal.open { display: flex; align-items: flex-start; justify-content: center; padding-top: 60px; }
+    .modal-content { background: var(--card); border-radius: 12px; padding: 20px; max-width: 90%; width: 100%; max-height: 78vh; overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 2px solid var(--border); }
+    .modal-title { font-size: 18px; font-weight: 700; color: var(--primary); }
+    .modal-close { background: none; border: none; font-size: 24px; color: var(--text-light); cursor: pointer; }
+    .modal-close:hover { color: var(--text); }
+    .modal-body { font-size: 14px; line-height: 1.8; color: var(--text); }
+
+    .empty { text-align: center; padding: 40px 20px; color: var(--text-light); }
+    .empty-icon { font-size: 48px; margin-bottom: 12px; }
+
+    @media (min-width: 768px) {
+      header h1 { font-size: 26px; }
+      header { padding: 14px 0; }
+      .header-inner { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+      .tab-primary-btn { padding: 13px 24px; font-size: 14px; }
+      .main-content { padding: 24px; max-width: 900px; margin: 0 auto; width: 100%; }
+      .section-header { font-size: 19px; margin-bottom: 18px; }
+      .modal-content { max-width: 600px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="header-inner">
+        <h1>ASIC Knowledge Base</h1>
+        <p>Physical Design & Tapeout Reference</p>
+      </div>
+    </header>
+
+    <!-- Primary Tabs: News / RTL to GDS / Terms -->
+    <div class="tabs-primary" id="tabsPrimary">
+      <button class="tab-primary-btn active" data-group="news">📰 News</button>
+      <button class="tab-primary-btn" data-group="rtl2gds">🔧 RTL to GDS</button>
+      <button class="tab-primary-btn" data-group="terms">📖 Terms</button>
+    </div>
+
+    <!-- Secondary Tabs: Flow Overview + 12 Steps -->
+    <div class="tabs-secondary" id="tabsSecondary">
+      <button class="tab-secondary-btn overview-btn active" data-tab="flowTab">Flow Overview</button>
+      <!-- step buttons injected by JS -->
+    </div>
+
+    <div class="main-content">
+      <div id="newsTab" class="tab-content active"></div>
+      <div id="flowTab" class="tab-content"></div>
+      <div id="stepTabContainer"></div>
+      <div id="termsTab" class="tab-content"></div>
+    </div>
+  </div>
+
+  <div class="modal" id="termModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modalTermTitle"></h2>
+        <button class="modal-close" id="modalClose">&times;</button>
+      </div>
+      <div class="modal-body" id="modalTermBody"></div>
+    </div>
+  </div>
+
+  <script type="module">
+    let appData = { news: [], terms: [], flow: [] };
+    let termsMap = {};
+    let termMatchRegex = null;
+    let termMatchLookup = {};
+    let currentGroup = 'news'; // news | rtl2gds | terms
+    let currentSecondaryTab = 'flowTab';
+
+    async function loadData() {
+      try {
+        const res = await fetch('./data.json');
+        if (res.ok) {
+          const json = await res.json();
+          appData.news = json.news || [];
+          appData.flow = json.flow || [];
+        }
+      } catch (err) {
+        console.warn('data.json 로드 실패:', err.message);
+      }
+
+      try {
+        const res = await fetch('./terms.txt');
+        if (res.ok) {
+          const text = await res.text();
+          appData.terms = parseTermsTxt(text);
+        }
+      } catch (err) {
+        console.warn('terms.txt 로드 실패:', err.message);
+      }
+
+      termsMap = {};
+      (appData.terms || []).forEach(t => termsMap[t.title.toLowerCase()] = t);
+      buildTermMatcher();
+      buildSecondaryTabs();
+      renderAll();
+    }
+
+    // terms.txt 파싱
+    // - '## '로 시작하는 줄: 주석 (무시)
+    // - '# '로 시작하는 줄: 새 용어 제목
+    // - 'match: a, b, c' 줄: 동의어/약어 (본문에서 자동 하이라이트될 단어들)
+    // - 그 외 줄: 다음 '# ' 전까지 전부 정의. 빈 줄로 문단 구분.
+    function parseTermsTxt(text) {
+      const lines = text.split(/\r?\n/);
+      const terms = [];
+      let current = null;
+      let defBuffer = [];
+      let idCounter = 0;
+
+      const flushDefinition = (bufLines) => {
+        const paragraphs = [];
+        let buf = [];
+        bufLines.forEach(l => {
+          if (l.trim() === '') {
+            if (buf.length) { paragraphs.push(buf.join(' ')); buf = []; }
+          } else {
+            buf.push(l.trim());
+          }
+        });
+        if (buf.length) paragraphs.push(buf.join(' '));
+        return paragraphs.join('\n');
+      };
+
+      const pushCurrent = () => {
+        if (current) {
+          current.definition = flushDefinition(defBuffer);
+          if (current.definition) terms.push(current);
+        }
+      };
+
+      lines.forEach(line => {
+        if (line.startsWith('## ') || line.trim() === '##') return; // 주석
+        if (line.startsWith('# ')) {
+          pushCurrent();
+          idCounter++;
+          current = { id: `term-${idCounter}`, title: line.slice(2).trim(), match: [] };
+          defBuffer = [];
+        } else if (current && /^match\s*:/i.test(line.trim())) {
+          const rest = line.replace(/^\s*match\s*:/i, '');
+          current.match = rest.split(',').map(s => s.trim()).filter(Boolean);
+        } else {
+          defBuffer.push(line);
+        }
+      });
+      pushCurrent();
+
+      return terms;
+    }
+
+    function buildSecondaryTabs() {
+      const container = document.getElementById('tabsSecondary');
+      const stepButtons = (appData.flow || []).map(step =>
+        `<button class="tab-secondary-btn" data-tab="step${step.step}Tab">${step.step}. ${step.shortTitle || step.title}</button>`
+      ).join('');
+      container.innerHTML = `<button class="tab-secondary-btn overview-btn active" data-tab="flowTab">Flow Overview</button>${stepButtons}`;
+
+      const stepContentContainer = document.getElementById('stepTabContainer');
+      stepContentContainer.innerHTML = (appData.flow || []).map(step =>
+        `<div id="step${step.step}Tab" class="tab-content"></div>`
+      ).join('');
+
+      // attach listeners
+      container.querySelectorAll('.tab-secondary-btn').forEach(btn => {
+        btn.addEventListener('click', () => switchSecondaryTab(btn.getAttribute('data-tab')));
+      });
+    }
+
+    function categoryClass(cat) {
+      return cat === 'Frontend' ? 'frontend' : cat === 'Signoff & Tapeout' ? 'signoff' : 'rtl2gds';
+    }
+
+    // 용어의 title + match(동의어/약어) 배열을 모아 하나의 정규식으로 구성.
+    // 긴 표현을 먼저 매칭하도록 길이순 정렬 → "Clock Domain Crossing"이
+    // "Clock Domain"보다 먼저 매칭되어 겹치는 표현도 올바르게 처리됨.
+    function buildTermMatcher() {
+      const entries = [];
+      (appData.terms || []).forEach(term => {
+        const words = (term.match && term.match.length) ? term.match : [term.title];
+        words.forEach(w => entries.push({ word: w, term }));
+      });
+
+      const seen = new Set();
+      const deduped = entries
+        .sort((a, b) => b.word.length - a.word.length)
+        .filter(e => {
+          const key = e.word.toLowerCase();
+          if (seen.has(key)) return false;
+          seen.add(key);
+          return true;
+        });
+
+      termMatchLookup = {};
+      deduped.forEach(e => { termMatchLookup[e.word.toLowerCase()] = e.term; });
+
+      if (deduped.length === 0) { termMatchRegex = null; return; }
+      const escapeRegex = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const pattern = deduped.map(e => escapeRegex(e.word)).join('|');
+      termMatchRegex = new RegExp(`\\b(${pattern})\\b`, 'gi');
+    }
+
+    function formatWithTerms(text, seenSet) {
+      if (!text) return '';
+      let html = String(text).replace(/\n/g, '<br>');
+      if (!termMatchRegex) return html;
+      const seen = seenSet || new Set();
+      html = html.replace(termMatchRegex, (match) => {
+        const term = termMatchLookup[match.toLowerCase()];
+        if (!term) return match;
+        if (seen.has(term.id)) return match; // 이미 이 카드에서 링크로 표시된 용어는 일반 텍스트로 둠
+        seen.add(term.id);
+        return `<span class="term-link" data-term-id="${term.id}">${match}</span>`;
+      });
+      return html;
+    }
+
+    function buildFlowCard(step, options = {}) {
+      const cls = categoryClass(step.category);
+      const wrap = document.createElement('div');
+      wrap.className = `flow-card ${cls}`;
+      wrap.id = `flow-card-${step.step}`;
+
+      // 카드 하나(=한 Step)당 같은 용어는 처음 등장할 때만 링크로 표시
+      const seen = new Set();
+      const fmt = (t) => formatWithTerms(t, seen);
+
+      wrap.innerHTML = `
+        <div class="flow-card-inner">
+          <div class="flow-card-header">
+            <span class="flow-badge">${step.step}</span>
+            <span class="flow-card-title">${step.title}</span>
+          </div>
+          <div class="flow-role-objective">
+            <div><b>역할:</b> ${step.role}</div>
+            <div><b>목적:</b> ${fmt(step.objective)}</div>
+          </div>
+          <div class="io-grid">
+            <div class="io-box input-box">
+              <div class="io-label">Input</div>
+              <ul class="io-list">${(step.inputs || []).map(i => `<li>${fmt(i)}</li>`).join('')}</ul>
+            </div>
+            <div class="io-box output-box">
+              <div class="io-label">Output</div>
+              <div class="io-sublabel">▸ 다음 단계 전달 파일</div>
+              <ul class="io-list">${(step.outputsDeliverable || []).map(o => `<li>${fmt(o)}</li>`).join('')}</ul>
+              <div class="io-sublabel">▸ Report / 중간 산출물</div>
+              <ul class="io-list">${(step.outputsReport || []).map(o => `<li>${fmt(o)}</li>`).join('')}</ul>
+            </div>
+          </div>
+          <div class="extra-grid">
+            <div class="extra-box gonogo-box">
+              <div class="extra-label">Go / No-Go 판단 포인트</div>
+              <ul class="extra-list">${(step.goNogo || []).map(g => `<li>${fmt(g)}</li>`).join('')}</ul>
+            </div>
+            <div class="extra-box risk-box">
+              <div class="extra-label">검출 문제 / 위험도</div>
+              <ul class="extra-list">${(step.risks || []).map(r => `<li>${fmt(r)}</li>`).join('')}</ul>
+            </div>
+          </div>
+          <div class="keypoints-box">${fmt(step.keyPoints)}</div>
+        </div>
+      `;
+      return wrap;
+    }
+
+    // ---- Render: News ----
+    function renderNewsTab() {
+      const container = document.getElementById('newsTab');
+      const items = appData.news || [];
+      if (items.length === 0) {
+        container.innerHTML = '<div class="empty"><div class="empty-icon">📰</div><p>뉴스 항목이 없습니다</p></div>';
+        return;
+      }
+      container.innerHTML = '<h2 class="section-header">News & Trends</h2>';
+      items.forEach(news => {
+        const item = document.createElement('div');
+        item.className = 'news-item';
+        item.id = `news-item-${news.id}`;
+        item.innerHTML = `
+          <div class="news-header">
+            <div class="news-title">${news.title}</div>
+            <div class="news-meta"><strong>${news.source}</strong> • ${news.date}</div>
+            <span class="news-toggle">▼</span>
+          </div>
+          <div class="news-content">
+            <p style="margin-bottom:10px;">${news.content}</p>
+            <hr style="border:none;border-top:1px solid var(--border);margin:10px 0;">
+            <div style="font-size:12px;color:var(--text-light);">
+              <p><strong>주장:</strong> ${news.claim}</p>
+              <p style="margin-top:6px;"><strong>신뢰도:</strong> ${news.credibility}</p>
+              <p style="margin-top:6px;"><strong>검증:</strong> ${news.verified ? '✓ 검증됨' : '✗ 미검증'}</p>
+            </div>
+          </div>`;
+        item.querySelector('.news-header').addEventListener('click', () => item.classList.toggle('open'));
+        container.appendChild(item);
+      });
+    }
+
+    // ---- Render: Flow Overview (all steps sequential, screenshot style) ----
+    // Flow Overview 탭: Flow_Overview.svg 파일 하나만 표시.
+    // 이 파일을 같은 이름으로 덮어쓰면 화면에 바로 반영됨 (캐시 방지를 위해 매번 새로 불러옴)
+    function renderFlowTab() {
+      const container = document.getElementById('flowTab');
+      container.innerHTML = `
+        <h2 class="section-header">RTL to GDS Flow Overview</h2>
+        <div class="flow-diagram-frame">
+          <img src="Flow_Overview.svg?v=${Date.now()}" alt="RTL to GDS Flow Overview" class="flow-diagram-img"
+               onerror="this.parentElement.innerHTML='<div class=&quot;empty&quot;><div class=&quot;empty-icon&quot;>🖼️</div><p>Flow_Overview.svg 파일을 찾을 수 없습니다.<br>index.html과 같은 폴더에 이 이름으로 파일을 넣어주세요.</p></div>'" />
+        </div>
+      `;
+    }
+
+    // ---- Render: Individual Step Tabs ----
+    function renderStepTabs() {
+      (appData.flow || []).forEach(step => {
+        const container = document.getElementById(`step${step.step}Tab`);
+        if (!container) return;
+        container.innerHTML = `<h2 class="section-header">Step ${step.step}. ${step.title}</h2>`;
+        container.appendChild(buildFlowCard(step));
+      });
+    }
+
+    // ---- Render: Terms (아코디언: 제목만 보이다가 클릭하면 펼쳐짐) ----
+    function renderTermsTab() {
+      const container = document.getElementById('termsTab');
+      const items = appData.terms || [];
+
+      const searchBarHtml = `
+        <div class="search-bar" id="searchBar">
+          <input type="text" id="searchInput" class="search-input" placeholder="Terms 검색 (제목/내용, 예: CDC, IR Drop)" />
+          <button class="search-btn" id="searchBtn">검색</button>
+          <button class="search-clear" id="searchClear">지우기</button>
+          <div class="search-results" id="searchResults"></div>
+        </div>
+      `;
+
+      if (items.length === 0) {
+        container.innerHTML = `<h2 class="section-header">Terminology (0개)</h2>${searchBarHtml}<div class="empty"><div class="empty-icon">📖</div><p>용어가 없습니다</p></div>`;
+        bindSearchEvents();
+        return;
+      }
+      container.innerHTML = `<h2 class="section-header">Terminology (${items.length}개)</h2>${searchBarHtml}`;
+      items.forEach(term => {
+        const item = document.createElement('div');
+        item.className = 'term-item';
+        item.id = `term-item-${term.id}`;
+        item.innerHTML = `
+          <div class="term-header">
+            <div class="term-title">${term.title}</div>
+            <span class="term-toggle">▼</span>
+          </div>
+          <div class="term-body">${term.definition}</div>
+        `;
+        item.querySelector('.term-header').addEventListener('click', () => item.classList.toggle('open'));
+        container.appendChild(item);
+      });
+      bindSearchEvents();
+    }
+
+    function openTermModal(term) {
+      document.getElementById('modalTermTitle').textContent = term.title;
+      document.getElementById('modalTermBody').textContent = term.definition;
+      document.getElementById('termModal').classList.add('open');
+    }
+    function closeTermModal() { document.getElementById('termModal').classList.remove('open'); }
+
+    function renderAll() {
+      renderNewsTab();
+      renderFlowTab();
+      renderStepTabs();
+      renderTermsTab();
+      document.querySelectorAll('.term-link').forEach(link => {
+        link.addEventListener('click', e => {
+          e.preventDefault();
+          const term = (appData.terms || []).find(t => t.id === link.getAttribute('data-term-id'));
+          if (term) openTermModal(term);
+        });
+      });
+    }
+
+    // ---- Primary / Secondary Tab Switching ----
+    function switchPrimaryGroup(group) {
+      currentGroup = group;
+      document.querySelectorAll('.tab-primary-btn').forEach(b => b.classList.toggle('active', b.getAttribute('data-group') === group));
+      document.getElementById('tabsSecondary').classList.toggle('visible', group === 'rtl2gds');
+
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      if (group === 'news') {
+        document.getElementById('newsTab').classList.add('active');
+      } else if (group === 'terms') {
+        document.getElementById('termsTab').classList.add('active');
+      } else if (group === 'rtl2gds') {
+        document.getElementById(currentSecondaryTab).classList.add('active');
+      }
+    }
+
+    function switchSecondaryTab(tabId) {
+      currentSecondaryTab = tabId;
+      switchPrimaryGroup('rtl2gds');
+      document.querySelectorAll('.tab-secondary-btn').forEach(b => b.classList.toggle('active', b.getAttribute('data-tab') === tabId));
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+    }
+
+    document.querySelectorAll('.tab-primary-btn').forEach(btn => {
+      btn.addEventListener('click', () => switchPrimaryGroup(btn.getAttribute('data-group')));
+    });
+
+    // ---- Search ----
+    function escapeRegExp(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+    function escapeHtml(s) { return s.replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c])); }
+
+    // 검색어가 등장하는 위치 앞뒤로 일부만 잘라 스니펫 생성, 일치 부분은 강조 표시
+    function getSnippet(text, query, radius = 28) {
+      const idx = text.toLowerCase().indexOf(query);
+      if (idx === -1) return '';
+      const start = Math.max(0, idx - radius);
+      const end = Math.min(text.length, idx + query.length + radius);
+      let snippet = escapeHtml(text.slice(start, end));
+      if (start > 0) snippet = '…' + snippet;
+      if (end < text.length) snippet = snippet + '…';
+      const re = new RegExp(escapeRegExp(escapeHtml(query)), 'i');
+      snippet = snippet.replace(re, m => `<mark>${m}</mark>`);
+      return snippet;
+    }
+
+    function performSearch() {
+      const query = document.getElementById('searchInput').value.trim().toLowerCase();
+      const resultsBox = document.getElementById('searchResults');
+
+      if (!query) { resultsBox.classList.remove('open'); resultsBox.innerHTML = ''; return; }
+
+      const results = [];
+      (appData.terms || []).forEach(t => {
+        const titleHit = t.title.toLowerCase().includes(query);
+        const bodyHit = (t.definition || '').toLowerCase().includes(query);
+        if (titleHit || bodyHit) {
+          const snippet = bodyHit ? getSnippet(t.definition || '', query) : '';
+          results.push({ type: 'term', icon: '📖', snippet, title: t.title, ref: t });
+        }
+      });
+
+      if (results.length === 0) {
+        resultsBox.innerHTML = '<div class="search-no-result">일치하는 용어가 없습니다</div>';
+      } else {
+        resultsBox.innerHTML = results.map((r, i) => `
+          <div class="search-result-item" data-idx="${i}">
+            <span class="search-result-icon">${r.icon}</span>
+            <span class="search-result-text">
+              <div class="search-result-title">${r.title}</div>
+              ${r.snippet ? `<div class="search-result-snippet">${r.snippet}</div>` : ''}
+            </span>
+          </div>`).join('');
+
+        resultsBox.querySelectorAll('.search-result-item').forEach(el => {
+          el.addEventListener('click', () => {
+            const r = results[parseInt(el.getAttribute('data-idx'))];
+            goToResult(r);
+            resultsBox.classList.remove('open');
+          });
+        });
+      }
+      resultsBox.classList.add('open');
+    }
+
+    function goToResult(r) {
+      switchPrimaryGroup('terms');
+      const el = document.getElementById(`term-item-${r.ref.id}`);
+      if (el) { el.classList.add('open'); el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    }
+
+    // Terms 탭 안에 검색바가 매번 새로 그려지므로, 렌더링 직후 이벤트를 다시 연결
+    function bindSearchEvents() {
+      const input = document.getElementById('searchInput');
+      const btn = document.getElementById('searchBtn');
+      const clearBtn = document.getElementById('searchClear');
+      if (!input) return;
+
+      input.addEventListener('input', performSearch);
+      input.addEventListener('keydown', e => { if (e.key === 'Enter') performSearch(); });
+      btn.addEventListener('click', performSearch);
+      clearBtn.addEventListener('click', () => {
+        input.value = '';
+        document.getElementById('searchResults').classList.remove('open');
+        document.getElementById('searchResults').innerHTML = '';
+      });
+      document.addEventListener('click', e => {
+        const bar = document.getElementById('searchBar');
+        if (bar && !bar.contains(e.target)) {
+          const results = document.getElementById('searchResults');
+          if (results) results.classList.remove('open');
+        }
+      });
+    }
+
+    document.getElementById('modalClose').addEventListener('click', closeTermModal);
+    document.getElementById('termModal').addEventListener('click', e => { if (e.target.id === 'termModal') closeTermModal(); });
+
+    loadData();
+  </script>
+</body>
+</html>

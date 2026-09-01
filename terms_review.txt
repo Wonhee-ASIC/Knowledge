@@ -1,0 +1,38 @@
+## [검토 필요 용어 목록]
+## 아래 항목들은 원본 OneNote 메모 내용이 불충분하거나, 표준 용어인지 확신할 수 없어
+## terms.txt에 반영하지 않고 이 파일에 따로 모아두었습니다.
+## 이 파일은 웹페이지에서 읽지 않으므로, 여기 내용을 고쳐도 사이트에는 반영되지 않습니다.
+## 직접 정의를 정리한 뒤, terms.txt 형식(# 제목 / match: / 정의)으로 옮겨 붙여넣으면 됩니다.
+
+
+# calibredrv_sub
+[보류 이유] 팀/사내 내부 스크립트로 보이며, 표준 EDA 용어가 아니라 정확한 설명을 확신할 수 없음
+[원본 메모] 사용목적: 툴은여러개의라이센스를가지고있고,보통툴을실행할때사용중인라이센스가아닌여분의라이센스를사용하게됩니다.하지만그렇지않은툴에대해여분의라이센스를자동으로사용할수있게합니다. 특징:"which <툴실행명령어>"를입력하면binary파일로되어있는파일인것을확인할수있습니다. *_sub명령어를활용하기위해-help를진행합니다.
+
+# Clock DAG hp(high-performance)wirelengths
+[보류 이유] Clock DAG(Directed Acyclic Graph) 항목과 유사하나, 매우 특정한 tool 리포트 지표로 보여 정확한 정의를 확신할 수 없음
+[원본 메모] These measurements are part of the Clock DAG statistics used to assess the performance of clockdistribution networks.
+
+# FLK (Foundation Logic Kit)
+[보류 이유] 파운드리/벤더 내부 용어로 추정되며 표준 정의를 확인하지 못함
+[원본 메모] Foundation Logic Kit
+
+# GSR (Global System Requirements)
+[보류 이유] 문맥이 불명확하여 정확한 의미를 확신할 수 없음
+[원본 메모] Global System Requirements
+
+# ICL (Instrument Connectivity Language)
+[보류 이유] ATE 관련 용어로 추정되나 확신도가 낮음
+[원본 메모] Instrument Connectivity Language
+
+# LVCC (Low supply voltage)
+[보류 이유] 정확한 사용 맥락을 확인하지 못함
+[원본 메모] Low supply voltage
+
+# SAMPUF
+[보류 이유] 정확한 약어 풀네임과 표준 정의를 확인하지 못함 (PUF 관련 용어로 추정)
+[원본 메모] “PUF 기술은 반도체 공정에서 발생하는 미세한 차이를 극대화하여 ‘칩 지문’을 생성한다. 하지만 반도체 제조는 공정 차이를 최소화하는 기술이 중요하기 때문에 PUF 설계에 적합한 공정 특성을 확보하기가 쉽지 않았다. 이와 더불어 칩마다 다른 값을 생성하는 ‘랜덤성’과 칩에서 한번 정해진 값이 온도, 전압 등 다양한 환경적 변화에도 변하지 않는 ‘안전성’ 등 모순적인 특성을 만족시켜야만 했다. 출처: <https://semiconductor.samsung.com/kr/news-events/tech-blog/sampuf-no-two-chips-have-the-same-fingerprint/>
+
+# TU/EU of Module
+[보류 이유] Innovus 관련 표시 옵션으로 보이나, EU가 정확히 무엇의 약자인지 확인 안 됨
+[원본 메모] Target Utilization Display Module constraints display a target utilization(TU=%) value to represent their physical design size. This is an estimation of module utilization for the given size of the module where only standard cell and hard macro areas are considered; floorplan constraints, such as placement blockages, are not considered. This value is calculated by the standard cells area plus the hard macros area, divided by the module area. The initial TU values are calculated during design import. You can place them in the core area so they are preplaced close to one another, as shown in the following figure How : TU = (standard cells area + hard macros area) / module area Effective Utilization Display Forfencesandregions, you can display the effective utilization(EU=%) value. The EU value takes into account the actual cells and hard macros in the fence or region, placement or routing blockages, partition cuts, and other floorplan constraints. It is a good practice to update the EU value before running placement.

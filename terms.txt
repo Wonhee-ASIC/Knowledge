@@ -1,0 +1,847 @@
+## ASIC Knowledge Base - Terms 정의 파일
+## 이 파일만 수정하면 웹페이지 Terms 탭 & 용어 하이라이트에 자동 반영됩니다.
+## data.json은 건드릴 필요 없습니다.
+##
+## [작성 규칙]
+## 1) 용어 제목: '# ' 로 시작 (예: # RTL (Register Transfer Level))
+## 2) 동의어/약어(선택): 'match: ' 뒤에 쉼표로 구분해서 나열
+##    -> 본문 어디서든 이 단어가 나오면 자동으로 파란 링크가 됨
+## 3) 정의: 그 다음 줄부터 다음 '# ' 가 나오기 전까지 전부 정의로 인식
+## 4) '##'로 시작하는 줄은 주석이라 무시됨 (자유롭게 메모 남겨도 OK)
+
+
+# +ve (Positive)
+match: +ve, Positive
+신호나 값이 양(+)의 극성/방향임을 나타내는 표기. 주로 -ve(음극성)와 짝을 이루어 pulse polarity나 edge 방향을 표시할 때 사용
+
+# -ve (Negative)
+match: -ve, Negative
+신호나 값이 음(-)의 극성/방향임을 나타내는 표기. +ve(양극성)와 대비되어 사용됨
+
+# .ploc (Pad Location Model File)
+match: .ploc, Pad Location Model File
+칩의 I/O pad 위치 정보를 담은 파일 형식. Pad 이름, x/y 좌표, metal layer, net 이름 등을 컬럼 형태로 기록하며, package/PCB 설계 도구와 pad 좌표를 주고받을 때 사용됨
+
+# ADD (Analog Droop Detector)
+match: ADD, Analog Droop Detector
+전원 전압이 순간적으로 급격히 하강(droop)하는 것을 감지하는 아날로그 회로. Dynamic IR drop이 임계치를 넘으면 이를 감지해 clock throttling 등으로 대응하는 데 활용됨
+
+# AFC (Automatic Frequency Control)
+match: AFC, Automatic Frequency Control
+기준 신호와 발진 신호의 주파수 차이를 자동으로 보정하는 제어 루프. PLL/클록 생성 회로에서 주파수 lock을 안정적으로 유지하기 위해 사용됨
+
+# ARM (Arm Holdings)
+match: ARM, Arm Holdings
+CPU 아키텍처를 설계하고 라이선스로 제공하는 회사이자, 그 아키텍처 자체를 가리키는 이름. 자체적으로 칩을 제조하지 않고 CPU core IP를 라이선스하는 fabless IP 비즈니스 모델을 사용함
+
+# Async Bridge
+match: Async Bridge
+서로 다른 clock domain을 사용하는 두 회로 사이에서 데이터를 안전하게 주고받도록 동기화·버퍼링을 수행하는 하드웨어 구조. FIFO나 handshake 방식의 synchronizer로 구현되는 경우가 많음
+
+# Asynchronous
+match: Asynchronous
+여러 신호나 회로 블록이 동일한 clock에 맞춰 정렬되어 있지 않은 상태. 서로 다른 주파수/위상으로 동작하는 두 도메인이 통신할 때는 metastability 위험이 있어 synchronizer가 필요함
+
+# ATE (Automatic Test Equipment)
+match: ATE, Automatic Test Equipment
+생산된 칩을 자동으로 검사하는 테스트 장비. Scan pattern을 칩의 SI/SE/Scan_clk 핀에 인가하고, 응답을 캡처해 전압·전류·타이밍이 스펙을 만족하는지 판정함
+
+# AVM (Apache Virtual Model)
+match: AVM, Apache Virtual Model
+Power/전류 특성을 요약한 chip-level power model 형식. Apache Design(현 Ansys) 계열 도구에서 board/package level power integrity 시뮬레이션에 칩 모델을 대입할 때 사용됨
+
+# AVS (Adaptive voltage scaling)
+match: AVS, Adaptive voltage scaling
+칩의 실제 동작 조건(온도, 공정 편차, 워크로드)을 실시간으로 감지해 공급 전압을 동적으로 조정하는 저전력 기법. 고정 마진 대신 필요한 만큼만 전압을 공급해 전력을 절감함
+
+# AVS timing (Adaptive Voltage Scaling)
+match: AVS timing, Adaptive Voltage Scaling
+AVS가 적용된 설계에서, 전압이 동적으로 바뀌는 상황을 반영한 timing 분석/제약. 전압 변화 구간에서도 setup/hold를 보장하도록 별도의 timing corner나 margin을 정의함
+
+# Back Annotation
+match: Back Annotation
+물리적 구현(P&R) 단계에서 추출한 실제 delay/parasitic 값을 상위 논리 설계나 타이밍 분석 단계로 되먹임하는 과정. Ideal 가정으로 진행했던 초기 분석을 실제 값 기반으로 갱신하는 데 사용됨
+
+# Bandwidth (대역폭)
+match: Bandwidth, 대역폭
+회로가 신호를 왜곡 없이 전달할 수 있는 주파수 범위. 이 범위를 넘어서면 신호의 진폭/위상이 왜곡되기 시작함
+
+# Bank in Memory
+match: Bank in Memory, Memory Bank
+하나의 메모리를 논리적/물리적으로 여러 개의 독립된 구역(bank)으로 나눈 구조. 서로 다른 bank는 동시에 접근 가능해 대역폭과 처리량을 높일 수 있음
+
+# Banking/Debanking
+match: Banking/Debanking
+여러 개의 단일 flip-flop을 하나의 MBFF(Multi-Bit Flip-Flop)로 합치는 것이 banking, 반대로 MBFF를 다시 개별 FF로 분리하는 것이 debanking. Banking은 clock 전력 절감에 유리하지만 timing 유연성은 떨어짐. 보통 pre-CTS 단계에서 수행됨
+
+# BEOL (Back End of Line)
+match: BEOL, Back End of Line
+웨이퍼 제조 공정 중 트랜지스터(FEOL) 형성 이후, metal 배선층과 via를 쌓아 소자들을 연결하는 후공정 단계
+
+# Beta Ratio
+match: Beta Ratio
+PMOS 전류 구동능력(β)에 대한 NMOS 전류 구동능력(β)의 비율. Latch나 SRAM cell 설계에서 pull-up/pull-down 세기의 균형을 맞추는 지표로 쓰임
+
+# BGA (Ball Grid Array)
+match: BGA, Ball Grid Array
+칩 패키지 하단에 작은 solder ball들을 격자 형태로 배열해 PCB와 연결하는 패키징 방식. Pin 수가 많은 고밀도 패키지에 주로 사용됨
+
+# BIOS (Basic Input/Output System)
+match: BIOS, Basic Input/Output System
+시스템 전원이 켜지면 CPU/메모리/저장장치 등 하드웨어를 초기화하고, 운영체제를 불러올 위치를 찾아 제어권을 넘겨주는 펌웨어
+
+# BIST (Built-In Self-Test)
+match: BIST, Built-In Self-Test
+칩 내부에 테스트 패턴 생성기(PRPG)와 응답 압축기(MISR)를 내장해, 외부 ATE 없이도 스스로 결함을 검사하는 DFT 기법. Memory에 적용하면 MBIST, Logic에 적용하면 Logic BIST라 부름
+
+# Capacitance
+match: Capacitance
+전기회로에서 전하(charge)를 저장하는 능력을 나타내는 물리량. 기호는 C, 단위는 F(Farad)이며, 두 도체(전극) 사이에 절연체를 두고 전압을 가하면 전하가 축적되는 원리로 동작함
+
+# CDC (Clock Domain Crossing)
+match: CDC, Clock Domain Crossing
+서로 다른 clock으로 동작하는 두 로직 사이의 신호 전달. metastability 위험이 있어 synchronizer 필수
+
+# CDL
+match: CDL
+Circuit Description Language의 약자로, SPICE와 유사한 문법의 netlist 형식. Calibre 등 physical verification 도구에서 LVS(Layout vs Schematic) 비교 시 schematic 쪽 netlist로 주로 사용됨
+
+# CDM (Charged Device Model) cell
+match: CDM(Charged Device Model) cell
+CDM 방식의 ESD 방전을 견디도록 설계된 보호 셀. 칩 내부에서 CDM 이벤트 발생 시 전류를 안전하게 흘려보내는 dynamic voltage clamp 역할을 함
+
+# CDM (Charged-Device Model)
+match: CDM, Charged-Device Model
+ESD(정전기 방전) 손상 모델 중 하나로, 소자 자체가 대전된 상태에서 접지된 물체에 접촉하며 순간적으로 방전되는 상황을 가정한 시험 규격
+
+# Clock DAG (Directed Acyclic Graph)
+match: Clock DAG, Directed Acyclic Graph
+Clock source에서 leaf sink까지의 clock 분배 경로를, 순환이 없는 방향성 그래프(DAG)로 표현한 것. CTS 도구가 clock tree 구조를 분석하고 최적화하는 데 사용하는 내부 표현
+
+# Clock Domain
+match: Clock Domain, clock domain
+동일한 clock 신호로 동작하는 로직들의 집합. 하나의 칩 안에는 서로 다른 주파수/위상을 가진 여러 clock domain이 존재할 수 있으며, domain 간 신호 전달 시 CDC(Clock Domain Crossing) 검증이 필요함
+
+# Clock Skew
+match: Clock Skew
+다양한 flip-flop들이 받는 clock 신호의 도착 시간 차이. 작을수록 좋음
+
+# CMOS (Complementary Metal-Oxide-Semiconductor)
+match: CMOS, Complementary Metal-Oxide-Semiconductor
+NMOS와 PMOS 트랜지스터를 상보적으로 결합해 만든 반도체 소자 구조. 정적 상태에서 전류가 거의 흐르지 않아 소비전력이 낮고 집적도가 높아 현대 디지털 회로의 기본 구조로 사용됨
+
+# Congestion
+match: Congestion
+Routing할 wire 공간이 부족한 상태. 높으면 routing 실패 또는 wire detour로 delay 증가
+
+# CoWoS (Chip on Wafer on Substrate)
+match: CoWoS, Chip on Wafer on Substrate
+여러 개의 반도체 칩을 하나의 실리콘 interposer 위에 나란히 배치해 고속으로 연결하는 TSMC의 2.5D 패키징 기술. HBM과 로직 칩을 함께 패키징하는 데 널리 사용됨
+
+# CPC (Clock Propagation Check)
+match: CPC, Clock Propagation Check
+설계 내 clock 신호가 각 register/module로 전파되는 경로와 방식이 의도대로 구성되었는지 점검하는 검증 항목
+
+# CPM (Chip Power Model)
+match: CPM, Chip Power Model
+칩 전체의 전력 소모 특성을 요약한 모델. Package/board level power integrity 분석에서 칩을 하나의 전류원처럼 대입하기 위해 사용됨
+
+# CPPR (Common Path Pessimism Removal)
+match: CPPR, Common Path Pessimism Removal
+Launch clock path와 capture clock path가 공유하는 공통 구간에서 발생하는 중복 마진(pessimism)을 제거해 timing 분석 정확도를 높이는 기법. 공통 구간의 max-min delay 차이(credit)를 slack 계산에 보정해줌
+
+# Data Rate
+match: Data Rate
+단위 시간당 전송되는 데이터의 양(예: bit/s). 통신 인터페이스나 memory I/O의 속도를 나타내는 지표
+
+# DCD (Duty Cycle Distortion)
+match: DCD, Duty Cycle Distortion
+Clock 신호의 duty cycle(High/Low 구간 비율)이 이상적인 50%에서 벗어나 왜곡되는 현상. Rising/falling edge에서 각각 데이터를 샘플링하는 DDR 인터페이스 등에서 timing margin을 줄이는 원인이 됨
+
+# DCG (DesignCompilerGraphical)
+match: DCG, DesignCompilerGraphical
+Synopsys Design Compiler의 Topographical Mode. 실제 물리적 배치 정보를 반영해 논리 합성을 수행하므로, 합성 시점의 timing 예측이 실제 P&R 결과와 더 가까움
+
+# DCT (Design Compiler Topographical Mode)
+match: DCT, Design Compiler Topographical Mode
+DCG와 동일한 기능을 가리키는 명칭으로, 물리 정보 기반 topographical synthesis를 의미함
+
+# DDC (Design Data Compiler)
+match: DDC, Design Data Compiler
+.ddc는 Synopsys Design Compiler가 생성하는 바이너리 설계 데이터베이스 형식. Netlist, 제약조건, 합성 중간 결과를 하나의 파일에 압축 저장해 Verilog보다 빠르게 읽고 쓸 수 있음
+
+# Delay Cell
+match: Delay Cell
+인버터를 직렬로 여러 단 연결하거나 트랜지스터 크기를 의도적으로 작게 만들어, 특정 경로에 원하는 만큼의 delay를 추가하기 위해 사용하는 셀. Hold violation 수정 등에 사용됨
+
+# Derate
+match: Derate
+실제 동작 조건의 불확실성(공정 편차, 전압/온도 변동, aging 등)을 반영해, 라이브러리 타이밍 값에 margin을 곱해 더 보수적으로 만드는 것. Signoff STA에서 corner별로 derating factor를 적용함
+
+# DFT (Design For Test)
+match: DFT, Design For Test
+칩 제조 후 검사를 용이하게 하기 위해 설계에 scan chain, JTAG 등의 test 구조를 삽입
+
+# DI (Digital Input)
+match: DI, Digital Input
+Digital Input
+
+# Die
+match: Die
+웨이퍼에서 가공을 마치고 개별적으로 잘라낸 하나의 반도체 칩 조각. SoC, CPU, 메모리 칩 등으로 불리는 완성된 제품의 실체가 이 die임
+
+# DMSA (Distributed Multi-Scenario Analysis)
+match: DMSA, Distributed Multi-Scenario Analysis
+여러 corner/mode의 timing 분석을 여러 대의 서버에 분산시켜 동시에 수행하는 방식. Multi-corner multi-mode STA의 실행 시간을 크게 단축시키기 위해 사용됨
+
+# DO (Digital Output)
+match: DO, Digital Output
+Digital Output
+
+# DRC (Design Rule Check)
+match: DRC, Design Rule Check
+Layout이 공정의 design rule(spacing, width, via array 등)을 만족하는지 검증
+
+# DSM (Delta-Sigma Modulator)
+match: DSM, Delta-Sigma Modulator
+Delta-Sigma Modulator
+
+# DTCO (Design-Technology Co-Optimization)
+match: DTCO, Design-Technology Co-Optimization
+공정(technology)과 설계(design)를 별개로 최적화하지 않고, 함께 고려해 PPA(Power/Performance/Area)를 최적화하는 활동. Cell 구조나 공정 규칙을 설계 요구에 맞춰 함께 조정함
+
+# Duty Cycle (Duty Ratio)
+match: Duty Cycle, Duty Ratio
+한 주기 동안 신호가 High(또는 활성) 상태로 유지되는 구간의 비율을 백분율로 나타낸 값. Clock의 경우 이상적으로는 50%
+
+# DVD (Dynamic Voltage Drop)
+match: DVD, Dynamic Voltage Drop
+칩 내부에서 다수의 셀이 동시에 switching하며 순간적으로 큰 전류를 끌어당길 때 발생하는 일시적인 전압 강하. Static IR drop과 달리 특정 순간의 switching activity에 좌우됨
+
+# DVFS (Dynamic Volatage and Frequency Scaling)
+match: DVFS, Dynamic Volatage and Frequency Scaling
+워크로드에 따라 공급 전압과 clock 주파수를 함께 동적으로 조정하는 저전력 기법. 성능이 필요할 때는 전압/주파수를 높이고, 유휴 상태에서는 낮춰 전력을 절감함
+
+# Early Clock Flow
+match: Early Clock Flow
+CTS 이전 단계에서 clock latency를 미리 추정해 반영하는 Innovus의 설정(setDesignMode -earlyClockFlow). Placement 단계부터 좀 더 현실적인 clock 지연을 고려해 최적화할 수 있게 해줌
+
+# Early Global Route (EGR)
+match: Early Global Route, EGR
+정식 detail routing 전에 개략적인 global routing을 빠르게 수행해 congestion을 미리 예측하는 기법(구버전에서는 TrialRoute라 불림). 최소한의 net만 detour시켜 congestion hotspot을 조기에 파악하는 데 사용됨
+
+# EDA (Electronic Design Automation)
+match: EDA, Electronic Design Automation
+반도체/전자 회로 설계를 자동화하는 소프트웨어 도구 산업 전반을 가리키는 용어. Synthesis, P&R, STA, 물리 검증 등 설계 전 과정에 사용되는 도구들이 여기 포함됨
+
+# Edge
+match: Edge
+신호가 0에서 1로, 또는 1에서 0으로 상태가 바뀌는 순간. 0→1 전이를 Rising Edge, 1→0 전이를 Falling Edge라 부름
+
+# EGFET (Thick-gate oxide transistor)
+match: EGFET, Thick-gate oxide transistor
+일반 core 트랜지스터보다 gate oxide가 두꺼운 I/O용 트랜지스터. 높은 I/O 전압을 견뎌야 하는 인터페이스 회로에 사용됨
+
+# ERC (Electrical Rule Check)
+match: ERC, Electrical Rule Check
+Antenna violation, floating net, series resistance 등 전기적 신뢰성 규칙을 검증하는 physical verification 항목. 위반이 있어도 파운드리 승인 waiver로 처리되는 경우가 있음
+
+# ESD
+match: ESD
+정전기 방전(Electro-Static Discharge)으로부터 칩을 보호하기 위한 회로 및 관련 설계 규칙 전반. JEDEC 표준(HBM 2kV 등)에 따라 통과 기준이 정의됨
+
+# ESD Clamp
+match: ESD Clamp
+ESD 이벤트 발생 시 과전압을 안전하게 흘려보내도록 VDD-VSS 사이에 연결되는 보호 회로. 서로 다른 VSS 도메인 사이에는 ESD diode로 연결해 방전 경로를 확보함
+
+# ESL (Electronic System-Level design)
+match: ESL, Electronic System-Level design
+RTL보다 더 높은 추상화 수준에서 시스템 전체의 아키텍처와 동작을 모델링하는 설계 방법론. 초기 성능/전력 트레이드오프 분석에 활용됨
+
+# ETA (Estimated Time of Arrival)
+match: ETA, Estimated Time of Arrival
+작업이나 프로젝트 마일스톤이 완료될 것으로 예상되는 시점
+
+# ETM (Extracted Timing Model)
+match: ETM, Extracted Timing Model
+설계의 타이밍 특성을 추출한 모델로, 상위 레벨에서 하위 모듈의 정확한 타이밍 분석에 사용됨
+
+# FEED (Frequency of FEEDback clock signal)
+match: FEED, Frequency of FEEDback clock signal
+PLL의 feedback 경로에 있는 clock 신호의 주파수
+
+# FFN (Fully Functional Nodes)
+match: FFN, Fully Functional Nodes
+테스트나 분석에서 정상적으로 기능하는 것으로 확인된 노드/유닛의 집합
+
+# FIN (Frequency of INput clock signal)
+match: FIN, Frequency of INput clock signal
+PLL 등 clock 생성 회로에 입력되는 reference clock 신호의 주파수
+
+# FOUT (Frequency of OUTput clock signal)
+match: FOUT, Frequency of OUTput clock signal
+PLL 등 clock 생성 회로에서 출력되는 clock 신호의 주파수
+
+# FPGA (Field-Programmable Gate Arrays)
+match: FPGA, Field-Programmable Gate Arrays
+제조 후에도 사용자가 논리 회로 구성을 재프로그래밍할 수 있는 반도체 소자. ASIC 개발 전 prototyping이나 소량 생산 제품에 활용됨
+
+# FREF (Frequency of REFerence clock signal)
+match: FREF, Frequency of REFerence clock signal
+PLL의 기준(reference) clock 신호 주파수
+
+# FSDB (Fast Signal Data Base)
+match: FSDB, Fast Signal Data Base
+Synopsys(구 Novas/Verdi)에서 사용하는 파형(waveform) 저장 파일 형식. VCD보다 용량이 작고 로딩이 빨라 대규모 시뮬레이션 파형을 다루는 데 널리 사용됨
+
+# FTGS (Full-Timing Gate-level Simulation)
+match: FTGS, Full-Timing Gate-level Simulation
+합성/P&R 후 얻은 gate-level netlist에 실제 SDF timing 정보를 반영해 수행하는 시뮬레이션. STA만으로 검증하기 어려운 기능적·시간적 상호작용을 확인하는 데 사용됨
+
+# FVCO (Frequency of VCO)
+match: FVCO, Frequency of VCO
+PLL 내부 VCO(Voltage-Controlled Oscillator)가 발진하는 주파수
+
+# GBA (Graph-Based Analysis)
+match: GBA, Graph-Based Analysis
+타이밍 그래프 전체를 한 번에 훑으며 worst-case 값을 전파하는 STA 분석 방식. PBA(Path-Based Analysis)보다 빠르지만, 실제로는 발생하지 않는 조합까지 반영해 다소 보수적(pessimistic)인 결과를 줄 수 있음
+
+# GCA (Galaxy Constraint Analysis)
+match: GCA, Galaxy Constraint Analysis
+SDC 제약조건의 일관성과 정확성을 분석하는 Cadence 도구/기능. Clock reconvergence 이슈처럼 제약조건 자체의 문제를 미리 잡아내는 데 사용됨
+
+# GCELL
+match: GCELL
+Global routing 단계에서 라우터가 배선 영역을 나누는 사각형 격자 단위(Global routing Cell). Congestion은 보통 GCell 단위로 계산되고 시각화됨
+
+# GDS (Graphic Data System)
+match: GDS, Graphic Data System
+Mask Data를저장하는표준파일형식으로레이아웃정보를포함
+
+# Glitch
+match: Glitch
+논리적으로는 나타나지 않아야 할 순간적인 신호 변화. 여러 입력 경로의 gate delay 차이(delay mismatch)로 인해 신호가 안정되기 전에 잠깐 튀는 현상이며, 동적 전력 소모와 오작동의 원인이 될 수 있음
+
+# GLS (Gate Level Simulation)
+match: GLS, Gate Level Simulation
+합성 이후의 gate-level netlist를 대상으로 수행하는 시뮬레이션. RTL 시뮬레이션에서는 드러나지 않는 합성/DFT 관련 이슈를 검증하는 데 사용됨
+
+# Glue Logic
+match: Glue Logic
+서로 다른 큰 IP/매크로 블록 사이를 연결하기 위해 필요한 자잘한 조합 로직. 이름 그대로 블록들을 이어붙이는 '접착제' 역할을 함
+
+# GPIO (General Purpose Input Output)
+match: GPIO, General Purpose Input Output
+특정 기능에 고정되지 않고 소프트웨어 설정에 따라 입력 또는 출력으로 자유롭게 사용할 수 있는 범용 핀
+
+# GTECH
+match: GTECH
+Synopsys Design Compiler 같은 logic synthesis 도구가 최적화 초기 단계에서 사용하는, 특정 공정에 종속되지 않은 generic technology cell library. 이후 technology mapping 단계에서 실제 standard cell로 매핑됨
+
+# HCI (Hot Carrier Injection)
+match: HCI, Hot Carrier Injection
+고전계에서 가속된 캐리어(전자/정공)가 gate oxide로 주입되어 트랜지스터 특성을 서서히 열화시키는 신뢰성 열화 메커니즘
+
+# HDD (Hardware Description Document (하드웨어 설명서))
+match: HDD, Hardware Description Document(하드웨어 설명서)
+하드웨어의 기능, 인터페이스, 동작을 문서 형태로 정리한 설계 명세서
+
+# HDL (Hardware Description Language)
+match: HDL, Hardware Description Language
+디지털 회로의 구조(structure), 동작(behavior), 타이밍을 기술하기 위한 프로그래밍 언어. Verilog, VHDL, SystemVerilog 등이 대표적이며 RTL 설계의 기반이 됨
+
+# Hold Time (Th)
+match: Hold Time, Th
+Flip-flop이 clock edge 이후 데이터를 정확히 저장하기 위해 데이터가 유지되어야 하는 최소 시간
+
+# Hotspot
+match: Hotspot
+Overflow가 발생한 인접 GCell들이 모여 있는 영역. 이 영역은 routing congestion이 심해 detail routing 실패나 우회 배선으로 인한 timing 저하 위험이 큼
+
+# HTOL (High Temperature Operating Life)
+match: HTOL, High Temperature Operating Life
+고온에서 칩을 장시간 동작시켜 수명/신뢰성을 평가하는 가속 열화 시험
+
+# ILM (Interface Logic Model)
+match: ILM, Interface Logic Model
+하위 모듈의 내부 논리를 생략하고 상위 모듈과의 interface 부분만 남긴 축약 모델. 대규모 설계에서 top-level 분석 시 하위 블록을 통째로 넣지 않고 가볍게 대체하는 데 사용됨
+
+# Impendace
+match: Impendace
+교류(AC) 회로에서 전류의 흐름을 방해하는 총 저항. 저항(R), 인덕턴스(L), 커패시턴스(C) 성분을 모두 포함하는 복소수 개념으로, 단순 직류 저항과 구분됨
+
+# Internal Power
+match: Internal Power
+Cell이 switching하는 순간 PMOS와 NMOS가 잠깐 동시에 켜지면서 VDD에서 VSS로 직접 흐르는 short-circuit current로 인해 소모되는 전력. Switching power(부하 충放전)와 별개로 셀 내부에서 발생하는 전력 성분
+
+# Interposer
+match: Interposer
+여러 개의 반도체 칩을 직접 연결하는 대신, 그 위에 올려 서로 통신할 수 있게 해주는 중간 기판. 2.5D 패키징(CoWoS 등)에서 칩 간 고속·고밀도 연결에 사용됨
+
+# IPF (Instance Power File)
+match: IPF, Instance Power File
+각 instance(cell)의 전력 소모 정보를 담은 파일 형식. Power integrity 분석 시 vector 기반(실제 activity 반영) 분석이 더 정확해, IPF보다는 vector-based 분석 사용이 권장됨
+
+# IR Drop
+match: IR Drop, IR drop
+Power delivery network의 저항으로 인한 voltage drop. V = I × R. 과도하면 timing 악화, 로직 오류 발생
+
+# JTAG (Joint Test Action Group)
+match: JTAG, Joint Test Action Group
+칩 내부 boundary scan 및 디버깅을 위한 표준 직렬 테스트 인터페이스(IEEE 1149.1). 소수의 핀만으로 칩 내부 상태를 읽고 쓸 수 있어 보드 레벨 테스트와 디버깅에 널리 사용됨
+
+# Latch
+match: Latch
+Level-sensitive한 저장 소자로, clock(또는 enable)이 활성 상태인 동안 계속 입력을 통과시켜 출력에 반영함. Flip-flop과 달리 edge가 아닌 level에 반응하므로, 데이터가 다소 늦게 도착해도 그 구간 안에서는 받아들일 수 있음
+
+# LDE (Layout Dependent Effect)
+match: LDE, Layout Dependent Effect
+트랜지스터 주변 layout(well, STI, 인접 소자와의 거리 등)에 따라 소자 특성이 달라지는 현상. 미세 공정으로 갈수록 영향이 커져 layout-aware 설계/시뮬레이션이 필요함
+
+# LDRC (Logic Design Rule Check)
+match: LDRC, Logic Design Rule Check
+물리 layout이 아닌 논리적 설계 규칙(예: naming convention, clock/reset 사용 규칙 등)을 검사하는 항목
+
+# LEC (Logic Equivalence Check)
+match: LEC, Logic Equivalence Check
+RTL과 netlist, 또는 최적화 전후 netlist가 논리적으로 동등한지 형식 검증(formal verification)
+
+# LEF
+match: LEF
+표준 셀/매크로의 물리적 정보(크기, pin 위치, layer, blockage 등)를 담은 파일 형식. 내부 트랜지스터 netlist 정보는 포함하지 않고, P&R 도구가 배치/배선에 필요한 외형 정보만 제공함
+
+# Level
+match: Level
+신호가 High(1) 또는 Low(0)로 안정적으로 유지되고 있는 상태 자체를 가리키는 표현
+
+# LFD (Ltiho Friendly Design)
+match: LFD, Ltiho Friendly Design
+Lithography(포토 공정)에서 패턴이 왜곡 없이 잘 형성되도록 layout 규칙을 고려해 설계하는 것. 미세 공정에서 double/multi patterning 등과 함께 고려됨
+
+# LIB (*.lib)
+match: LIB, *.lib
+Standard cell의 timing, power, 함수 정보를 텍스트 형식으로 담은 Liberty 파일 형식. Cell별 delay/setup/hold 값과 generated clock 정보 등을 포함해 STA와 synthesis의 기본 입력으로 사용됨
+
+# Lint
+match: Lint, Lint tools
+RTL 코드를 실제로 시뮬레이션하지 않고, 문법 오류·미사용 신호·잠재적 버그·코딩 스타일 위반 등을 자동으로 검사하는 정적 분석(static analysis) 기법. Verilator, SpyGlass 등의 도구 사용
+
+# Load
+match: Load
+구동 소자의 출력이 밀어야 하는 전기적 부하. Gate capacitance와 wire capacitance의 합으로 구성되며, 이 값이 클수록 delay가 커짐
+
+# Local Density
+match: Local Density
+Placement 영역 내 일정 구간에서의 셀 밀도. Innovus 등에서 opt_local_density_max_allowed 같은 옵션으로 국소 밀도의 상한을 지정해 congestion을 예방함
+
+# Lockup Latch
+match: Lockup Latch
+데이터가 너무 빨리 다음 단계로 넘어가 발생하는 hold violation(race-through)을 막기 위해, clock 경로 중간에 삽입하는 latch. 정상 경로에는 영향을 주지 않으면서 hold margin을 확보하는 용도로 사용됨
+
+# LV (Logic Vision)
+match: LV, Logic Vision
+Siemens(구 Mentor)의 DFT/BIST IP 브랜드명. Memory BIST, Logic BIST 등의 test IP를 제공함
+
+# LVS (Layout vs Schematic)
+match: LVS, Layout vs Schematic
+Layout의 device/net이 schematic/netlist와 일치하는지 검증. 불일치 시 logic error 발생
+
+# MBFF (Multi-Bit Flip-Flop)
+match: MBFF, Multi-Bit Flip-Flop
+여러 개의 flip-flop을 하나의 cell 안에 통합해 clock buffer를 공유하도록 만든 셀. Clock tree 전력을 줄이는 데 유리하지만, 개별 FF보다 timing 최적화 유연성은 떨어짐
+
+# MBIST (Memory Built-In Self-Test)
+match: MBIST, Memory Built-In Self-Test
+메모리 블록을 대상으로 하는 BIST. 칩 내부에 테스트 패턴 생성/응답 검사 로직을 두어, 외부 장비 없이도 메모리 결함을 검사함
+
+# MDB (Multi Diffusion Break)
+match: MDB, Multi Diffusion Break
+인접한 트랜지스터 사이 diffusion 영역을 여러 개의 poly로 끊어 분리하는 방식. Single Diffusion Break(SDB)보다 면적은 크지만 인접 셀 간 stress 영향이 적음
+
+# Memory
+match: Memory
+데이터를 저장하는 반도체 소자 전반을 가리키는 용어. 저장된 위치와 관계없이 접근 시간이 동일한 RAM, 전원이 꺼지면 데이터가 사라지는 volatile 메모리(SRAM/DRAM), 전원이 꺼져도 유지되는 non-volatile 메모리(ROM/Flash) 등으로 구분됨
+
+# Metastability
+match: Metastability, metastability
+Flip-flop이 setup/hold time을 위반한 데이터를 받았을 때, 출력이 0도 1도 아닌 불안정한 상태에 머무르다가 예측 불가능한 값으로 정착하는 현상. 비동기 clock domain crossing에서 주로 발생
+
+# MIM (Multiple Instantiated Modules)
+match: MIM, Multiple Instantiated Modules
+설계 내에서 동일한 모듈이 여러 번 인스턴스화되어 사용되는 경우를 가리킴. Synthesis 도구가 이런 모듈을 한 번만 최적화하고 재사용할지, 개별적으로 최적화할지를 결정하는 기준이 됨
+
+# MIM Capacitor
+match: MIM Capacitor
+Metal-Insulator-Metal 구조로 이루어진 온칩 커패시터. 두 금속층 사이에 얇은 절연막을 두어 커패시턴스를 형성하며, decoupling capacitor 등으로 사용됨
+
+# MPW (Multi Project Wafer)
+match: MPW, Multi Project Wafer
+여러 고객사/프로젝트의 칩 설계를 하나의 웨이퍼에 함께 배치해 제조 비용을 나눠 부담하는 방식. 소량 시제품 제작이나 연구용 칩에 주로 활용됨
+
+# MTBF (Mean Time Between Failure)
+match: MTBF, Mean Time Between Failure
+평균고장간격. 수리가 가능한 시스템이 한 번의 고장이 발생한 시점부터 다음 고장이 발생할 때까지 고장 없이 작동하는 평균 시간을 의미
+
+# NBTI (Negative-Bias Temperature Instability)
+match: NBTI, Negative-Bias Temperature Instability
+PMOS 트랜지스터에 음의 gate 전압이 장시간 걸릴 때 threshold voltage가 서서히 변하는 신뢰성 열화 메커니즘. 고온에서 더 심해짐
+
+# NDM (New Data Model (in Synthesis))
+match: NDM, New Data Model (in Synthesis)
+Synopsys의 새로운 설계 데이터베이스 형식으로, 기존 Milkyway를 대체하는 통합 데이터 모델. ICC2/Fusion Compiler 등에서 physical design 데이터를 저장하는 데 사용됨
+
+# Node
+match: Node
+회로 내에서 신호가 전달·연결되는 전기적 지점. 서로 연결된 전선(net)들이 모여 동일한 전위를 갖는 하나의 node를 이룸
+
+# NPV (No-Propagation Vectorless)
+match: NPV, No-Propagation Vectorless
+실제 switching activity vector 없이도, 각 로직 블록의 통계적 전력 특성을 기반으로 이벤트를 생성해 power/IR drop 분석을 수행하는 vectorless 해석 모드. Ansys RedHawk 계열 도구에서 제공됨
+
+# OASIS (Open Artwork System Interchange Standard)
+match: OASIS, Open Artwork System Interchange Standard
+GDSII를 대체하기 위해 만들어진 layout 데이터 교환 표준. 동일한 정보를 GDSII보다 훨씬 작은 파일 크기로 압축해 저장할 수 있음
+
+# OBS (Obstraction)
+match: OBS, Obstraction
+Placement나 routing이 금지된 영역을 표시하는 blockage. Macro 주변이나 특정 layer의 배선을 막기 위해 지정됨
+
+# OCC (On-chip Clock Controller)
+match: OCC, On-chip Clock Controller
+칩 내부에서 clock의 시작/정지, 분주, 위상 등을 제어하는 회로. 저전력 모드 전환이나 clock gating, at-speed test에서 clock을 제어하는 데 사용됨
+
+# OCV (On-chip Variation)
+match: OCV, On-chip Variation
+동일 칩 내에서도 위치·전압·온도 차이로 delay가 달라질 수 있음을 가정해 margin을 적용하는 기법. 무조건 margin을 많이 주기보다, 실제로는 상쇄되는 경우까지 반영해 과도한 pessimism을 줄이는 방향으로 적용됨
+
+# Overflow
+match: Overflow
+Global routing 단계에서 특정 GCell에 필요한 배선 용량(track 수)이 실제 제공 가능한 용량을 초과한 상태. Overflow가 클수록 congestion이 심하다는 의미이며 H(수평)/V(수직) 성분으로 나눠 보고되기도 함
+
+# PBA (Path-Based Analysis)
+match: PBA, Path-Based Analysis
+각 개별 경로(path)를 실제 조건에 맞게 정밀하게 재계산하는 STA 분석 방식. GBA보다 느리지만 더 정확하며, GBA 상 critical path가 PBA에서는 sub-critical로 바뀌는 경우도 있음
+
+# PCB (Printed Circuit Board)
+match: PCB, Printed Circuit Board
+부품과 배선 패턴을 담은 기판. 칩과 다른 부품들을 연결해 하나의 시스템을 구성함
+
+# PDK (Process Design Kit)
+match: PDK, Process Design Kit
+특정 공정에서 사용 가능한 소자 모델, design rule, standard cell library 등 설계에 필요한 모든 기술 정보를 포함한 파운드리 제공 자료
+
+# PERC
+match: PERC
+Siemens Calibre의 Parasitic Extraction and Reliability Checking 기능. ESD 경로, latch-up, gate breakdown 등 전기적 신뢰성 위반을 layout에서 검증하는 데 사용됨
+
+# PFD (Phase Frequency Detector)
+match: PFD, Phase Frequency Detector
+PLL 내부에서 reference clock과 feedback clock의 위상/주파수 차이를 검출하는 회로. 이 차이를 기반으로 charge pump/VCO를 제어해 clock을 lock시킴
+
+# PISI (Power Integrity, Signal Integrity)
+match: PISI, Power Integrity, Signal Integrity
+Power integrity(전원 무결성)와 signal integrity(신호 무결성) 분석을 함께 아우르는 용어. IR drop, EM, crosstalk 등 전기적 신뢰성 검증 영역을 통칭함
+
+# PJX (Power noise induced Jitter eXtension)
+match: PJX, Power noise induced Jitter eXtension
+전원 노이즈(IR drop 등)로 인해 clock jitter가 늘어나는 정도를 나타내는 지표. Power integrity가 timing에 미치는 영향을 정량화하는 데 사용됨
+
+# POC (Power On Circuitry)
+match: POC, Power On Circuitry
+칩의 I/O power pad가 정상적으로 전원이 인가되었는지 확인하는 회로. Power sequencing이나 reset 로직의 기준 신호로 활용됨
+
+# POCV (Parametric On-Chip Variation)
+match: POCV, Parametric On-Chip Variation
+OCV의 발전된 형태로, 공정 편차를 셀별 파라미터(민감도 계수)로 통계적으로 모델링해 좀 더 정교하게 margin을 적용하는 기법
+
+# Power
+match: Power
+VLSI 설계에서 회로에 공급되는 전원 전체를 가리키는 용어. PVDD, AVDD, VDD처럼 용도(I/O, 아날로그, 코어)에 따라 서로 다른 전압 rail로 분리해 잡음 간섭을 줄임
+
+# PowerDissipation
+match: PowerDissipation
+회로가 동작하면서 소모하는 전력이 열 등으로 방출되는 것. 정적 전력(누설 전류)과 동적 전력(switching)으로 구분됨
+
+# Propagation Delay
+match: Propagation Delay
+신호가 셀의 입력에서 출력까지 전달되는 데 걸리는 시간. Cell 고유의 intrinsic delay와 출력에 걸린 부하(load)에 의한 지연을 합한 값
+
+# PSI (Power Signal Integrity)
+match: PSI, Power Signal Integrity
+Power integrity와 signal integrity를 아우르는 전기적 신뢰성 분석 영역. IR drop, EM, crosstalk 등을 포함함
+
+# PVT (Process, Voltage, Temperature)
+match: PVT, Process, Voltage, Temperature
+칩 동작에 영향을 주는 세 가지 변동 요인인 공정(Process), 전압(Voltage), 온도(Temperature)를 함께 가리키는 용어. Multi-corner STA는 다양한 PVT 조합에서 timing을 검증함
+
+# QPT (Quadraple Patterning Technology)
+match: QPT, Quadraple Patterning Technology
+하나의 layer 패턴을 네 번의 노광/식각으로 나눠 형성하는 multi-patterning 리소그래피 기법. 노광 장비의 해상도 한계를 넘어서는 미세 패턴을 구현하는 데 사용됨
+
+# Race-through (레이스-스루)
+match: Race-through, 레이스-스루
+원래 한 clock cycle에 한 단계만 통과해야 할 데이터가, hold violation으로 인해 너무 빨리 여러 단계를 통과해버리는 문제. Hold time 위반의 대표적인 결과 중 하나
+
+# RAM (Random Access Memory)
+match: RAM, Random Access Memory
+저장된 위치와 관계없이 항상 동일한 시간에 데이터를 읽고 쓸 수 있는 메모리. SRAM, DRAM 등이 이에 해당함
+
+# RC Delay
+match: RC Delay
+배선(wire)이나 회로의 저항(R)과 커패시턴스(C)에 의해 발생하는 신호 지연. 배선이 길고 얇을수록, 부하가 클수록 RC delay가 커짐
+
+# RDL (Re-Distribution Layer)
+match: RDL, Re-Distribution Layer
+칩 표면의 원래 pad 위치를 원하는 위치로 재배치하기 위해 패키징 단계에서 추가하는 배선층. Wafer-level packaging이나 flip-chip 패키징에서 pad pitch를 넓히는 데 사용됨
+
+# Recovery Time (Recovery Check)
+match: Recovery Time, Recovery Check
+Reset 등 비동기 제어 신호가 비활성화된 후, 다음 active clock edge까지 유지되어야 하는 최소 시간. 이를 위반하면 reset 해제 시점의 데이터가 불안정해질 수 있음
+
+# Removal Time
+match: Removal Time
+Reset 등 비동기 제어 신호가 active clock edge와 너무 가까운 시점에 비활성화되지 않도록 요구되는 최소 시간 간격. Recovery time과 짝을 이루는 개념
+
+# RESETB (RESET-Bar)
+match: RESETB, RESET-Bar
+RESET-Bar
+
+# Retention cell
+match: Retention cell
+전원이 차단(power-down)되는 동안에도 블록의 상태(state)를 저장해두었다가, 전원이 복구되면 그 상태를 복원해주는 저전력 셀
+
+# Retention Flip-flop
+match: Retention Flip-flop
+저전력 설계에서 사용되는 flip-flop으로, 시스템이 전력 절감을 위해 power gating될 때 직전 데이터를 별도의 shadow latch에 유지(retention)했다가 전원 복구 시 복원함
+
+# RGPA (RTL to Gate Power Analysis)
+match: RGPA, RTL to Gate Power Analysis
+RTL 단계에서 추정한 전력과 실제 gate-level netlist 기준 전력을 비교·분석하는 흐름. 설계 초기 단계의 전력 예측 정확도를 검증하는 데 사용됨
+
+# RMS (Root Mean Square) Current
+match: RMS, Root Mean Square, RMS Current, I rms
+시간에 따라 변하는 전류를 동일한 발열 효과를 내는 직류 값으로 환산한 실효 전류값. EM(electromigration) 신뢰성 검증에서 배선이 견뎌야 하는 전류 기준으로 사용됨
+
+# ROM Code
+match: ROM Code
+Read Only Memory에 저장되어 읽기만 가능한 코드. 전원이 꺼져도 내용이 유지되는 비휘발성 메모리이며, 시스템 부팅 초기 단계(BIOS 등)에서 실행되는 코드를 저장하는 데 사용됨
+
+# ROSC (Ring OSCillator)
+match: ROSC, Ring OSCillator
+인버터 등 지연 소자를 홀수 개 고리 형태로 연결해 자체적으로 발진하는 회로. 공정/전압/온도(PVT) 모니터링이나 클록 생성에 활용됨
+
+# RTL (Register Transfer Level)
+match: RTL
+레지스터 간 데이터 흐름(register-to-register)으로 회로의 동작을 기술하는 설계 추상화 레벨. Verilog나 VHDL 같은 HDL(하드웨어 기술 언어)로 작성하며, 이후 Synthesis 단계에서 gate-level netlist로 변환됨
+
+# Sampling
+match: Sampling
+Flip-flop이 clock의 상승/하강 edge 시점에 데이터 입력(D) 값을 읽어와 출력(Q)에 저장하는 동작
+
+# Scan Chain
+match: Scan Chain
+칩 내부의 모든 flip-flop을 하나의 긴 shift register처럼 직렬로 연결한 구조. 외부에서 임의의 테스트 패턴을 shift-in한 뒤, 한 clock만 capture 모드로 동작시켜 결과를 shift-out함으로써 내부 로직 결함을 검사할 수 있게 해줌
+
+# SDB (Single Diffusion Break)
+match: SDB, Single Diffusion Break
+인접한 트랜지스터 사이 diffusion 영역을 하나의 poly로 끊어 분리하는 방식. MDB보다 면적 효율은 좋지만 인접 셀 간 stress 영향을 더 받을 수 있음
+
+# SDC (Standard Design Constraints)
+match: SDC, Standard Design Constraints
+Clock 정의, I/O delay, false path 등 설계에 적용할 타이밍/구조적 제약을 기술하는 표준 TCL 기반 형식. Synthesis부터 STA까지 전 flow에서 공통으로 사용되는 timing 기준점
+
+# SDF (Standard Delay Format)
+match: SDF, Standard Delay Format
+Cell delay와 net delay를 포함한 실제 타이밍 정보를 담은 표준 파일 형식. 주로 gate-level simulation에서 실제 지연을 반영하기 위해 사용됨
+
+# Setup Time (Tsu)
+match: Setup Time, Tsu
+Flip-flop이 clock edge에서 데이터를 정확히 latch하기 위해 데이터가 clock edge 이전에 안정되어야 하는 최소 시간
+
+# SGFET (Thin-gate oxide transistor)
+match: SGFET, Thin-gate oxide transistor
+일반적인 core 트랜지스터로, EGFET(thick-gate) 대비 gate oxide가 얇아 낮은 전압에서 빠르게 동작하지만 견딜 수 있는 최대 전압은 낮음
+
+# Shell Wrapper
+match: Shell Wrapper
+다른 명령어나 스크립트를 감싸서 호출하는 스크립트. 복잡한 명령어 조합을 간단한 이름 하나로 추상화해 반복 작업을 편리하게 만드는 데 사용됨
+
+# Signal EM
+match: Signal EM
+신호 net에서 발생하는 electromigration. 지속적으로 높은 전류 밀도에 노출된 금속 배선의 원자가 전자의 운동량 전달로 서서히 이동해, 단선(open)이나 단락(short) 위험을 만드는 신뢰성 이슈
+
+# Slack
+match: Slack
+Slack = Required Time - Arrival Time. 양수면 constraint 만족(여유), 음수면 violation(위반)
+
+# SOCV (Statistical On-Chip Variation)
+match: SOCV, Statistical On-Chip Variation
+공정 편차를 셀 delay에 대한 통계적 분포(평균, 표준편차)로 모델링해 timing margin을 계산하는 기법. POCV보다 더 정밀한 통계적 접근 방식
+
+# SOD (Signoff Opt Design)
+match: SOD, Signoff Opt Design
+Signoff 단계 기준으로 설계를 최종 최적화하는 작업/모드. Signoff STA 조건에 맞춰 남은 violation을 정리하는 데 사용됨
+
+# SOI (Silicon On Insulator)
+match: SOI, Silicon On Insulator
+실리콘 기판과 활성층 사이에 절연막(주로 산화막)을 삽입한 웨이퍼 구조. 기생 커패시턴스와 누설 전류를 줄여 speed와 전력 효율을 개선함
+
+# SPEF
+match: SPEF
+Standard Parasitic Exchange Format. Layout에서 추출한 wire의 R, C, CC(coupling capacitance) 정보를 담은 파일
+
+# SSC (Spread Spectrum Clock)
+match: SSC, Spread Spectrum Clock
+Clock 주파수를 의도적으로 작은 범위에서 미세하게 변조해, 특정 주파수에 에너지가 집중되는 것을 막는 기법. EMI(전자파 간섭)를 낮추는 데 사용됨
+
+# Static IR Drop
+match: Static IR Drop
+PDN(power delivery network)의 저항과 평균 전류(누설 전류 포함)로 인해 발생하는, 시간에 따라 거의 변하지 않는 전압 강하. Dynamic IR drop과 달리 특정 switching 순간이 아닌 정상 상태 기준으로 계산됨
+
+# STD_UHD Layer
+match: STD_UHD Layer
+UHD(6T 등 초고밀도) standard cell을 표시하는 marker layer. Via spacing 등 일부 DRC 규칙을 UHD cell에 한해 완화 적용할 때, 이 layer로 대상 영역을 구분함
+
+# Stuck-at Fault (Scan SA)
+match: Stuck-at Fault, Scan SA
+특정 노드가 항상 0(stuck-at-0) 또는 항상 1(stuck-at-1)로 고정되어버리는 고전적인 결함 모델. ATPG가 이 모델을 기준으로 결함을 검출하는 테스트 패턴을 생성함
+
+# SVP (Silicon Virtual Prototyping)
+match: SVP, Silicon Virtual Prototyping
+90% 정도 완성된 netlist를 가지고 floorplan부터 P&R, congestion, timing 분석까지 실제와 동일한 흐름으로 미리 실행해보는 과정. 프로젝트 후반의 리스크를 조기에 발견하기 위해 수행됨
+
+# SVRF (Standard Verification Rule Format)
+match: SVRF, Standard Verification Rule Format
+Calibre 등 physical verification 도구에서 DRC/LVS/ERC 규칙을 기술하는 표준 문법. 파운드리가 제공하는 design rule deck이 이 형식으로 작성됨
+
+# Synchronizer
+match: Synchronizer, synchronizer
+서로 다른 clock domain 간 신호를 안전하게 전달하기 위한 회로. 보통 2단 이상의 flip-flop을 직렬로 연결(double flop synchronizer)하여 metastability가 다음 단으로 전파되는 것을 방지함
+
+# TD (Transition Delay Fault)
+match: TD, Transition Delay Fault, Scan TD, 지연 결함 모델
+회로가 특정 delay(전이 시간) 이상 느려지는 결함을 모델링한 결함 모델. Stuck-at fault와 달리 정적인 논리값 고정이 아니라, 실제 동작 속도(at-speed)에서 신호 전이가 기준 시간 내에 완료되지 못하는 문제를 검출함. ATPG가 이 모델을 기준으로 at-speed test 패턴(Scan TD)을 생성함
+
+# Tessent
+match: Tessent
+Siemens(구 Mentor)의 DFT 도구 제품군. ATPG, scan insertion, BIST, boundary scan 등 설계 테스트 관련 기능을 통합 제공함
+
+# Timing Arc
+match: Timing Arc
+신호가 셀의 한 pin(input)에서 다른 pin(output)으로 전달될 때의 지연 관계를 모델링한 단위. Liberty 파일에서 셀 delay는 이 timing arc 단위로 정의됨
+
+# Timing Constraints
+match: Timing Constraints
+설계가 만족해야 하는 시간 관련 제약들을 통칭하는 표현. Setup time, hold time, recovery time, removal time, minimum pulse width 등이 포함됨
+
+# TIV (Temperature Inversion)
+match: TIV, Temperature Inversion
+일반적인 예상과 달리, 특정 공정/전압 조건에서 온도가 높아질수록 delay가 오히려 짧아지는 현상. 미세 공정에서 threshold voltage의 온도 의존성이 커지며 나타남
+
+# TNS (Total Negative Slack)
+match: TNS, Total Negative Slack
+모든 위반 경로의 slack 합. 설계 전체의 timing violation 심각도를 나타냄
+
+# Toggle Rate
+match: Toggle Rate
+일정 시간(주로 1 clock period) 동안 node/net이 switching하는 평균 빈도. Dynamic power 추정 시 activity factor로 사용됨
+
+# TPT (Triple Patterning Technology)
+match: TPT, Triple Patterning Technology
+하나의 layer 패턴을 세 번의 노광/식각으로 나눠 형성하는 multi-patterning 리소그래피 기법
+
+# transition
+match: transition
+신호가 한 논리 값에서 다른 값으로 전이하는 데 걸리는 시간(slew). Timing 라이브러리에서 이 값에 상한(transition time limit)을 두어, 지나치게 느린 edge로 인한 신뢰성 저하를 방지함
+
+# Transmission Gate
+match: Transmission Gate
+NMOS와 PMOS 트랜지스터를 병렬로 연결해, 신호를 선택적으로 통과시키거나 차단하는 스위치 역할을 하는 회로. 두 트랜지스터를 함께 사용해 High/Low 신호 모두 손실 없이 전달할 수 있음
+
+# Transparent Latch
+match: Transparent Latch
+Enable이 켜져 있는 동안에는 입력이 그대로 출력에 나타나(transparent) 통과하고, enable이 꺼지면 그 시점의 값을 저장(hold)하는 저장 소자
+
+# Trigger
+match: Trigger
+신호의 Level을 변화시키는 별도의 입력 신호. 예를 들어 0인 상태에 trigger 신호를 인가하면 1로 바뀌는 식으로 상태 전이를 유발함
+
+# TS (Tessent Shell)
+match: TS, Tessent Shell
+Tessent 도구를 명령어 기반으로 제어하는 shell 인터페이스. Scan insertion, ATPG 등 DFT 작업을 스크립트로 자동화하는 데 사용됨
+
+# TSV (Through Silicon Via,실리콘 관통전극)
+match: TSV, Through Silicon Via, 실리콘 관통전극
+와이어 본딩 대신, 실리콘 die를 관통하는 미세한 구멍에 전극을 채워 상단/하단 칩을 수직으로 연결하는 기술. 3D 적층 패키징(예: HBM D램)에서 칩 간 연결에 사용됨
+
+# TT (Typical/Typical)
+match: TT, Typical/Typical
+공정과 전압이 모두 표준(typical) 조건인 PVT corner. Multi-corner STA에서 SS(worst setup), FF(worst hold)와 함께 기준(reference) corner로 사용됨
+
+# TVF (Timing Verification Fromak)
+match: TVF, Timing Verification Fromak
+타이밍 검증을 위한 제약 조건과 정보를 정의하는 파일 형식
+
+# UBM (Under Bump Metallurgical)
+match: UBM, Under Bump Metallurgical
+Flip-chip 패키징에서 Al pad와 Cu-based solder bump를 연결하기 위해 형성하는 다층 금속 구조. Bump의 부착력과 전기적 접촉을 보장하는 역할을 함
+
+# Uniform Density
+match: Uniform Density
+설계 전체 utilization이 낮을 때(예: 70% 미만), 셀을 국소적으로 몰리지 않고 균등하게 분포시키는 placement 옵션. Congestion을 예방하고 후속 CTS/routing을 쉽게 만들기 위해 사용됨
+
+# UPF
+match: UPF
+Unified Power Format. Power domain, power gating, level shifter, retention 등 저전력 설계 요소를 표준화된 방식으로 기술하는 IEEE 표준 형식으로, 설계·시뮬레이션·구현 도구 간 저전력 인텐트를 공유하는 데 사용됨
+
+# Useful Skew
+match: Useful Skew
+모든 flip-flop의 clock 도착 시간을 동일하게 맞추는 대신, 의도적으로 skew를 주어 특정 경로의 setup/hold margin을 확보하는 기법. Critical path의 launch/capture clock 도착 시간 차이를 활용해 timing을 개선함
+
+# VCD (Value (Variable) Change Dump)
+match: VCD, Value(Variable) Change Dump
+시뮬레이션 중 신호 값이 변한 시점과 값을 기록한 표준 파형 파일 형식. 파형 뷰어에서 波 확인하거나 활동도(activity) 기반 power 분석의 입력으로 사용됨
+
+# VCOOUT (VCO OUTput)
+match: VCOOUT, VCO OUTput
+PLL 내부 VCO(Voltage-Controlled Oscillator)의 출력 clock 신호
+
+# VCTRL (Voltage ConTRoL)
+match: VCTRL, Voltage ConTRoL
+VCO의 발진 주파수를 조절하기 위해 인가하는 제어 전압
+
+# VLSI (Very-Large-Scale Integration)
+match: VLSI, Very-Large-Scale Integration
+수만 개 이상의 트랜지스터를 하나의 칩에 집적하는 기술. 현대 SoC/프로세서 설계 전반을 가리키는 포괄적인 용어로도 쓰임
+
+# VMF (Virtual Metal Fill)
+match: VMF, Virtual Metal Fill
+실제 layout에 dummy metal을 채우기 전, timing/parasitic에 미치는 영향을 미리 추정하기 위해 사용하는 가상의 metal fill 모델
+
+# VPP
+match: VPP
+OTP/eFuse 등 non-volatile 소자를 프로그래밍할 때 필요한, 일반 동작 전압보다 높은 별도의 프로그래밍 전용 전원
+
+# WGL (Waveform Generation Language)
+match: WGL, Waveform Generation Language
+ATE(자동 테스트 장비)에 인가할 테스트 패턴과 파형을 기술하는 표준 언어. Scan/functional 테스트 패턴을 ATE가 이해할 수 있는 형식으로 변환하는 데 사용됨
+
+# wimpy cell
+match: wimpy cell
+동일 기능이지만 gate length를 의도적으로 더 길게 만들어 전류 구동 능력을 낮춘 셀(예: 삼성 파운드리 기준 L30 대신 L34 cell). 전류 구동 능력이 낮은 대신 누설전류가 적어, 성능보다 전력이 중요한 경로에 사용됨
+
+# WNS (Worst Negative Slack)
+match: WNS, Worst Negative Slack
+모든 경로 중 가장 나쁜(음수) slack 값. 이 값이 0 이상이어야 timing 만족
+
+# WRAPPER
+match: WRAPPER
+다른 모듈이나 IP를 감싸서 인터페이스를 표준화하거나 추가 기능(테스트, 전압 레벨 변환 등)을 덧붙이는 상위 모듈. 내부 구현을 바꾸지 않고도 외부 인터페이스만 일관되게 유지할 수 있게 해줌
+
+# Zero Wire Load Delay
+match: Zero Wire Load Delay
+합성(synthesis)이나 placement 초기 단계에서 배선의 지연과 부하를 0으로 가정하고 수행하는 타이밍 분석 방식. 실제 배선이 만들어지기 전 단계라 이상적인(ideal) 조건으로 1차 최적화를 수행하는 데 사용됨
+
+# 표준편차
+match: 표준편차
+데이터 값들이 평균을 중심으로 얼마나 흩어져 있는지를 나타내는 통계 지표. 값이 작을수록 데이터가 평균 근처에 밀집되어 있고, 클수록 넓게 퍼져 있음을 의미함

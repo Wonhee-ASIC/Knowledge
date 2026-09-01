@@ -1,0 +1,466 @@
+{
+  "news": [
+    {
+      "id": "news-001",
+      "title": "ASIC Design Trends 2024",
+      "source": "EE Times",
+      "date": "2024-09-01",
+      "content": "Advanced ASIC 설계는 AI, automotive, HPC 분야에서 급성장 중. 3nm 공정 채택 확대와 함께 DFT, power integrity 검증이 더욱 중요해지고 있습니다.",
+      "claim": "3nm 이하 공정에서 AI accelerator 설계가 주도적",
+      "source_url": "https://www.eetimes.com",
+      "credibility": "T1: 전문 매체",
+      "verified": true
+    },
+    {
+      "id": "news-002",
+      "title": "Physical Design Automation 혁신",
+      "source": "Cadence Blog",
+      "date": "2024-08-25",
+      "content": "Machine Learning 기반 placement 최적화가 P&R 시간을 50% 단축하는 사례가 보고되고 있습니다.",
+      "claim": "ML 기반 자동화로 P&R 시간 50% 단축 가능",
+      "source_url": "https://www.cadence.com/blog",
+      "credibility": "T2: 벤더 공식 문서",
+      "verified": false
+    }
+  ],
+  "flow": [
+    {
+      "id": "flow-01",
+      "step": 1,
+      "title": "RTL Design & Lint / CDC Check",
+      "category": "Frontend",
+      "role": "설계 명세화",
+      "objective": "RTL behavioral model 작성 및 logic/CDC 오류 사전 검증",
+      "inputs": [
+        "Design specification",
+        "RTL code (Verilog/VHDL)",
+        "Clock domain definition"
+      ],
+      "goNogo": [
+        "✓ Lint: 모든 오류/경고 해결",
+        "✓ CDC: Safe synchronizer 검증",
+        "✓ Design readiness: >95% 완성도"
+      ],
+      "risks": [
+        "⚠ Unsynchronized clock crossing → metastability",
+        "⚠ RTL 불완전성 → synthesis 오류",
+        "⚠ DFT 미반영 → 재작업"
+      ],
+      "keyPoints": "• Lint tools: RTL syntax/semantic 검증\n• CDC: async domain 간 safe crossing 확인",
+      "shortTitle": "RTL Design & Lint",
+      "outputsDeliverable": [
+        "Linted RTL"
+      ],
+      "outputsReport": [
+        "Lint report",
+        "CDC verification report"
+      ]
+    },
+    {
+      "id": "flow-02",
+      "step": 2,
+      "title": "Logic Synthesis & DFT Insertion",
+      "category": "Frontend",
+      "role": "Netlist 생성",
+      "objective": "RTL → gate-level netlist + DFT scan chain 삽입",
+      "inputs": [
+        "Linted RTL",
+        "Standard Cell Library (.lib)",
+        "Timing Constraints (SDC)",
+        "DFT config"
+      ],
+      "goNogo": [
+        "✓ WNS ≈ 0 (ideal wire)",
+        "✓ Area/Power within budget",
+        "✓ DFT fully inserted"
+      ],
+      "risks": [
+        "⚠ Over-optimization → trade-off 악화",
+        "⚠ Scan chain error → test 불가",
+        "⚠ SDC 부정확 → P&R 목표 미달"
+      ],
+      "keyPoints": "• Synthesis: Ideal 조건(zero wire delay)\n• SDC는 P&R의 기준점",
+      "shortTitle": "Logic Synthesis",
+      "outputsDeliverable": [
+        "Gate-level netlist (with DFT)",
+        "SDC baseline"
+      ],
+      "outputsReport": [
+        "Synthesis report",
+        "DFT insertion report"
+      ]
+    },
+    {
+      "id": "flow-03",
+      "step": 3,
+      "title": "Logic Equivalence Check (LEC)",
+      "category": "Frontend",
+      "role": "정형 검증",
+      "objective": "RTL-vs-Netlist, Pre-DFT-vs-Post-DFT 논리 동등성 정형 검증",
+      "inputs": [
+        "Original RTL",
+        "Pre-DFT netlist",
+        "Post-DFT netlist",
+        "LEC config"
+      ],
+      "goNogo": [
+        "✓ RTL vs Pre-DFT: EQUIVALENT",
+        "✓ Pre-DFT vs Post-DFT: EQUIVALENT",
+        "✓ Non-equivalent: ZERO"
+      ],
+      "risks": [
+        "⚠ LEC fail → synthesis 재진행",
+        "⚠ LEC 스킵 → 숨은 버그",
+        "⚠ Partial LEC → 미발견 risk"
+      ],
+      "keyPoints": "• Formal tools: BDD/SAT 기반 증명\n• LEC 통과 필수 (tapeout 조건)",
+      "shortTitle": "LEC",
+      "outputsDeliverable": [
+        "검증된 Netlist (LEC Pass)"
+      ],
+      "outputsReport": [
+        "Equivalence mapping report",
+        "DFT equivalence 확인서"
+      ]
+    },
+    {
+      "id": "flow-04",
+      "step": 4,
+      "title": "Floorplan & Power Planning",
+      "category": "RTL to GDS",
+      "role": "물리적 구조 설계",
+      "objective": "칩 구조 설계: Macro 배치, Power Mesh, I/O 배치로 P&R 가능성 확보",
+      "inputs": [
+        "Gate-level netlist",
+        "Macro specs",
+        "I/O pad list",
+        "Core utilization target (50-70%)",
+        "Technology PDK"
+      ],
+      "goNogo": [
+        "✓ Core utilization: 50-70%",
+        "✓ Macro placement: 고정",
+        "✓ Power ring/mesh: 확립",
+        "✓ IR drop: budget 내"
+      ],
+      "risks": [
+        "⚠ Poor floorplan → P&R 불가능",
+        "⚠ High utilization (>75%) → congestion",
+        "⚠ Inadequate power → local IR drop"
+      ],
+      "keyPoints": "• Floorplan이 P&R 난이도 80% 결정\n• Power mesh: layer별 M4-M8, grid spacing 최소화",
+      "shortTitle": "Floorplan & Power",
+      "outputsDeliverable": [
+        "Floorplan (.def)",
+        "Power mesh/strap strategy"
+      ],
+      "outputsReport": [
+        "Die size estimation",
+        "IR drop pre-analysis report"
+      ]
+    },
+    {
+      "id": "flow-05",
+      "step": 5,
+      "title": "Placement & Pre-CTS Optimization",
+      "category": "RTL to GDS",
+      "role": "셀 배치 & 1차 최적화",
+      "objective": "Logic cell 배치, congestion 회피, setup violation 1차 완화",
+      "inputs": [
+        "Gate-level netlist",
+        "Floorplan (.def)",
+        "Timing constraints (SDC)",
+        "Placement rules"
+      ],
+      "goNogo": [
+        "✓ WNS ≈ 0 또는 작은 음수",
+        "✓ Congestion: global <70%, detail <90%",
+        "✓ Utilization: target ±5%",
+        "✓ Setup margin: CTS 복구 가능"
+      ],
+      "risks": [
+        "⚠ High congestion → routing fail",
+        "⚠ Asymmetric placement → skew 심화",
+        "⚠ Critical path 분산 → delay 증가"
+      ],
+      "keyPoints": "• Timing-driven placement: critical path cell 인접\n• Buffer insertion: long net delay 감소\n• Cell upsizing: slack < 0 net 처리",
+      "shortTitle": "Placement & Opt",
+      "outputsDeliverable": [
+        "Placed netlist (.def)",
+        "Decap/buffer inserted netlist"
+      ],
+      "outputsReport": [
+        "Placement metrics report",
+        "Congestion map",
+        "Pre-CTS timing report"
+      ]
+    },
+    {
+      "id": "flow-06",
+      "step": 6,
+      "title": "Clock Tree Synthesis (CTS)",
+      "category": "RTL to GDS",
+      "role": "Clock 분배",
+      "objective": "Clock 균등 분배, skew 최소화, hold violation 해결",
+      "inputs": [
+        "Placed netlist",
+        "Clock spec",
+        "Timing constraints (skew/latency)",
+        "CTS buffer library"
+      ],
+      "goNogo": [
+        "✓ Skew: <10% period",
+        "✓ Insertion latency: matched",
+        "✓ WNS ≈ 0 (setup)",
+        "✓ Hold violation: 식별됨"
+      ],
+      "risks": [
+        "⚠ High skew → margin 낭비",
+        "⚠ Excessive latency → chip timing 악화",
+        "⚠ Hold violation 복잡성"
+      ],
+      "keyPoints": "• H-tree/X-tree: binary로 skew 최소화\n• Hold fixing: skew 차이 활용\n• Multi-clock: latency matching 필수",
+      "shortTitle": "CTS",
+      "outputsDeliverable": [
+        "CTS netlist (with buffers)",
+        "Clock tree structure (.def)"
+      ],
+      "outputsReport": [
+        "Post-CTS timing report",
+        "Hold violation list (ECO)"
+      ]
+    },
+    {
+      "id": "flow-07",
+      "step": 7,
+      "title": "Routing & Post-Route Optimization",
+      "category": "RTL to GDS",
+      "role": "배선 & 최종 최적화",
+      "objective": "Metal 배선으로 연결, timing/IR drop 최종 최적화",
+      "inputs": [
+        "CTS netlist",
+        "Routing rules",
+        "Timing constraints",
+        "Power mesh",
+        "Track/layer availability"
+      ],
+      "goNogo": [
+        "✓ All nets routed (100%)",
+        "✓ Post-route timing: WNS≥0, TNS≥0",
+        "✓ DRC <5%",
+        "✓ Antenna <1.5x limit"
+      ],
+      "risks": [
+        "⚠ Routing fail → net unrouted",
+        "⚠ Crosstalk → delay 악화",
+        "⚠ EM violation → reliability",
+        "⚠ Antenna → oxide breakdown"
+      ],
+      "keyPoints": "• Global routing: coarse topology\n• Detail routing: metal polygon, DRC 준수\n• Via strategy: redundant (reliability), array (EM/IR)",
+      "shortTitle": "Routing & Opt",
+      "outputsDeliverable": [
+        "Routed netlist (.gds/.def)",
+        "SPEF (extracted R/C/CC)"
+      ],
+      "outputsReport": [
+        "Post-route timing report",
+        "Congestion map",
+        "DRC/LVS/antenna 초기 결과"
+      ]
+    },
+    {
+      "id": "flow-08",
+      "step": 8,
+      "title": "Dummy Metal Fill (CMP Planarity)",
+      "category": "RTL to GDS",
+      "role": "공정 평탄화 준비",
+      "objective": "CMP 평탄도 유지를 위해 더미 metal/base fill 삽입, 기생 성분 재추출",
+      "inputs": [
+        "Routed layout (.gds)",
+        "Extracted SPEF (pre-fill)",
+        "CMP fill density spec",
+        "Fill blockage rules"
+      ],
+      "goNogo": [
+        "✓ Metal fill: 50-80%",
+        "✓ Base fill: 70-90%",
+        "✓ Blockage compliance",
+        "✓ Post-fill SPEF checked",
+        "✓ Capacitance <3%"
+      ],
+      "risks": [
+        "⚠ Uneven density → CMP 편차 → timing/IR 편차",
+        "⚠ Over-fill → parasitic 급증",
+        "⚠ Sensitive region 충돌 → noise",
+        "⚠ SPEF 미반영 → signoff 부정확"
+      ],
+      "keyPoints": "• CMP: metal/oxide 동시 제거로 평탄성\n• Fill 없으면 density 불균형 → height 편차\n• Timing impact: ±2-3%",
+      "shortTitle": "Metal Fill",
+      "outputsDeliverable": [
+        "Layout with fill (.gds_filled)",
+        "Updated SPEF (post-fill)"
+      ],
+      "outputsReport": [
+        "Fill density report",
+        "CMP planarity analysis"
+      ]
+    },
+    {
+      "id": "flow-09",
+      "step": 9,
+      "title": "Static Timing Analysis (Signoff STA)",
+      "category": "Signoff & Tapeout",
+      "role": "Timing 최종 검증",
+      "objective": "Extracted SPEF(with fill) 반영 multi-corner, multi-mode STA로 constraint 만족 증명",
+      "inputs": [
+        "Routed netlist (.def)",
+        "Extracted SPEF (post-fill)",
+        "Timing library (.lib)",
+        "Timing constraints (SDC)",
+        "PVT corners"
+      ],
+      "goNogo": [
+        "✓ ALL corners: WNS≥0, TNS≥0",
+        "✓ ALL modes (functional/scan/shift)",
+        "✓ Multi-mode: no conflict",
+        "✓ Derating: margin 포함"
+      ],
+      "risks": [
+        "⚠ SS corner fail → product 불량 (가장 위험)",
+        "⚠ FF corner hold fail → test 불가",
+        "⚠ Multi-mode conflict → 발견 어려움",
+        "⚠ Aging/temp derate 미반영 → field fail"
+      ],
+      "keyPoints": "• Multi-corner: SS(setup), FF(hold), TT(ref)\n• Multi-mode: functional, scan, shift\n• Signoff 필수: fail시 ECO 또는 재반복",
+      "shortTitle": "Signoff STA",
+      "outputsDeliverable": [
+        "Pass/fail attestation (Signoff 승인)"
+      ],
+      "outputsReport": [
+        "Signoff timing report",
+        "WNS/TNS/violation report",
+        "Critical path tree"
+      ]
+    },
+    {
+      "id": "flow-10",
+      "step": 10,
+      "title": "Reliability Verification (Power & Signal Integrity)",
+      "category": "Signoff & Tapeout",
+      "role": "전력/신호 무결성 검증",
+      "objective": "Static/Dynamic IR Drop, EM, Voltage Droop로 power delivery 신뢰성 검증",
+      "inputs": [
+        "Routed layout (.gds)",
+        "Power mesh",
+        "Netlist (current)",
+        "PDN spice model",
+        "Activity pattern",
+        "Metal spec"
+      ],
+      "goNogo": [
+        "✓ Static IR: ±3% Vdd",
+        "✓ Dynamic IR: <5% Vdd",
+        "✓ EM: <100mA/μm²",
+        "✓ Decap: 30% droop reduction",
+        "✓ Voltage margin: +50-100mV"
+      ],
+      "risks": [
+        "⚠ Excessive static IR → delay 증가, metastability",
+        "⚠ Dynamic droop → CDC error",
+        "⚠ EM fail → open circuit (weeks~months)",
+        "⚠ Decap ineffective → voltage spike"
+      ],
+      "keyPoints": "• Static IR: V = I_avg × R\n• Dynamic IR: L_di/dt spike\n• EM: >50-100mA/μm² 금지\n• Decap: dynamic용 (static 아님)",
+      "shortTitle": "Reliability",
+      "outputsDeliverable": [
+        "Reliability 인증 (승인)"
+      ],
+      "outputsReport": [
+        "Static IR drop map",
+        "Dynamic IR transient 결과",
+        "EM analysis 결과",
+        "Power grid violation list",
+        "Voltage margin summary"
+      ]
+    },
+    {
+      "id": "flow-11",
+      "step": 11,
+      "title": "Physical Verification (DRC, LVS, ERC, Antenna)",
+      "category": "Signoff & Tapeout",
+      "role": "설계 규칙 검증",
+      "objective": "Layout이 design rule, schematic 정합성, 신뢰성 기준 만족 검증",
+      "inputs": [
+        "Layout (.gds)",
+        "Routed netlist (.v, .def)",
+        "Design rule deck",
+        "LVS/ERC rule",
+        "Exclude/include maps"
+      ],
+      "goNogo": [
+        "✓ DRC: zero (또는 approved waiver)",
+        "✓ LVS: device match, net continuity 100%",
+        "✓ ERC: no floating, antenna <1.5x",
+        "✓ Waiver: foundry-approved",
+        "✓ Mask data ready"
+      ],
+      "risks": [
+        "⚠ DRC fail → manufacturing defect",
+        "⚠ LVS mismatch → logic error",
+        "⚠ Antenna fail → oxide breakdown",
+        "⚠ Unapproved waiver → foundry reject"
+      ],
+      "keyPoints": "• DRC: spacing, width, via, density rules\n• LVS: device/net count, pin connection\n• ERC: antenna, series R, latch-up\n• Voltage-aware DRC: HV isolation",
+      "shortTitle": "Physical Verif.",
+      "outputsDeliverable": [
+        "DRC/LVS/ERC Clean 인증 (Tapeout 승인)"
+      ],
+      "outputsReport": [
+        "DRC report",
+        "LVS report",
+        "ERC report",
+        "Violation database",
+        "Waiver justification"
+      ]
+    },
+    {
+      "id": "flow-12",
+      "step": 12,
+      "title": "Final GDSII / OASIS Generation & Tapeout",
+      "category": "Signoff & Tapeout",
+      "role": "제조 데이터 전달",
+      "objective": "최종 layout을 GDSII/OASIS로 생성, 파운드리 제출 및 tape-in",
+      "inputs": [
+        "DRC/LVS/ERC-clean layout (.gds)",
+        "Signoff STA",
+        "Power integrity cert",
+        "GDS script",
+        "Foundry checklist"
+      ],
+      "goNogo": [
+        "✓ GDS integrity: valid hierarchy",
+        "✓ Layer mapping: verified",
+        "✓ Checksum: MD5 confirmed",
+        "✓ All docs: submitted",
+        "✓ Tape-in: foundry confirmed"
+      ],
+      "risks": [
+        "⚠ GDS corruption → 2-3주 re-work",
+        "⚠ Wrong layer map → chip fail",
+        "⚠ Metadata mismatch → mask mix-up",
+        "⚠ Post-tapeout ECO → 50M$ cost"
+      ],
+      "keyPoints": "• GDSII: binary format, layer/datatype 정확성 critical\n• OASIS: 50-70% 작은 크기\n• No ECO after tape-in: 설계 변경 불가\n• Silicon sample: fab 4-8주 후",
+      "shortTitle": "Tapeout",
+      "outputsDeliverable": [
+        "Final GDSII (.gds/.gds.gz)",
+        "OASIS file (.oas)"
+      ],
+      "outputsReport": [
+        "Tapeout log",
+        "Design handoff document",
+        "Delivery metadata"
+      ]
+    }
+  ]
+}
